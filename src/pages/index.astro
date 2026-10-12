@@ -27,7 +27,7 @@ const tiles = [
 ---
 <BaseLayout bareNav>
   <header slot="header" class="hero stripes">
-    <video class="hero__video" autoplay muted loop playsinline preload="metadata" poster={posterImg.src} aria-hidden="true" data-hero-video>
+    <video class="hero__video" autoplay muted loop playsinline preload="auto" poster={posterImg.src} aria-hidden="true" data-hero-video>
       <source src={url('videos/hero-portrait.mp4')} type="video/mp4" media="(max-aspect-ratio: 3/4)" />
       <source src={url('videos/hero-landscape.mp4')} type="video/mp4" />
     </video>
@@ -127,19 +127,35 @@ const tiles = [
 </BaseLayout>
 
 <script>
-  // Hero video: pause/play button, and start paused for people who prefer reduced motion
+  // Hero video: start it ourselves (some browsers ignore the autoplay attribute,
+  // e.g. iPhone Low Power Mode), retry on the visitor's first tap/scroll, and
+  // keep a pause button so anyone who wants it still can stop the motion.
   const video = document.querySelector<HTMLVideoElement>('[data-hero-video]');
   const toggle = document.querySelector<HTMLButtonElement>('[data-hero-toggle]');
   if (video && toggle) {
+    let userPaused = false;
     const sync = () => {
       toggle.setAttribute('aria-label', video.paused ? 'Play background video' : 'Pause background video');
       toggle.querySelector<HTMLElement>('[data-icon-pause]')!.hidden = video.paused;
       toggle.querySelector<HTMLElement>('[data-icon-play]')!.hidden = !video.paused;
     };
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { video.removeAttribute('autoplay'); video.pause(); }
+    const start = () => {
+      if (userPaused || !video.paused) return;
+      video.muted = true;
+      video.play().catch(() => {});
+    };
     video.addEventListener('play', sync);
     video.addEventListener('pause', sync);
-    toggle.addEventListener('click', () => { video.paused ? video.play().catch(() => {}) : video.pause(); });
+    video.addEventListener('canplay', start);
+    toggle.addEventListener('click', () => {
+      userPaused = !video.paused;
+      userPaused ? video.pause() : video.play().catch(() => {});
+    });
+    for (const type of ['pointerdown', 'touchstart', 'keydown', 'scroll']) {
+      addEventListener(type, start, { once: true, passive: true });
+    }
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) start(); });
+    start();
     sync();
   }
 
@@ -192,7 +208,7 @@ const tiles = [
   }
   @media (max-width: 960px) { .hero__badge { display: none; } }
   .hero__body { position: relative; flex: 1; display: flex; align-items: flex-end; width: 100%; max-width: none; padding-top: 80px; padding-bottom: 96px; }
-  .hero__title { font-size: clamp(56px, 9vw, 132px); line-height: .92; letter-spacing: 1px; }
+  .hero__title { font-size: clamp(42px, 6vw, 88px); line-height: .95; letter-spacing: 1px; }
   .hero__lede { font-size: 20px; line-height: 1.5; color: var(--cream-soft); max-width: 560px; }
   .hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
 
