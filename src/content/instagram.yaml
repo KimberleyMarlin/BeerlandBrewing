@@ -5,8 +5,8 @@
   posts:
     - { image: ../assets/photos/tap-pour.jpg }
     - { image: ../assets/photos/cheers.jpg }
-    - {}
-    - {}
+    - { image: ../assets/photos/food.jpg }
+    - { image: ../assets/photos/laughing.jpg }
     - {}
     - {}
 

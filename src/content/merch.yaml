@@ -22,7 +22,7 @@
   sizes: [S, M, L, XL, XXL]
   views:
     - { label: Front }
-    - { label: Back }
+    - { label: Back, image: ../assets/merch/crew-back.jpg }
 
 - id: windbreaker
   name: Windbreaker
@@ -32,7 +32,7 @@
   detail: Hooded half-zip pullover with a front pouch pocket and chest badge.
   sizes: [S, M, L, XL, XXL]
   views:
-    - { label: Front }
+    - { label: Front, image: ../assets/merch/windbreaker-front.jpg }
 
 - id: bucket-reversible
   name: Reversible Bucket Hat
