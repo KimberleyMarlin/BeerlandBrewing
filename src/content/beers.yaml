@@ -45,7 +45,7 @@
   abv: 5.8
   tag: Beerfest exclusive · from 13 Nov
   colour: '#5E9E57'
-  # image: ../assets/beers/guava-lava.jpg
+  image: ../assets/beers/guava-lava.jpg
   alt: 'Guava Lava can label: a pink volcano erupting over a rainforest'
   summary: Intense tropical fruit and candy-like hop character. Fermented warm with White Labs Suava and dry hopped mid-fermentation with Superdelic for layers of ripe mango, pink guava and berry candy — with white-wine and passionfruit esters and a soft, pillowy mouthfeel.
   notes:
@@ -77,8 +77,8 @@
   range: core
   style: Australian Pale Ale
   abv: null
-  colour: '#2A2119'
-  # image: ../assets/beers/pale-ale.jpg
+  colour: '#4DB848'
+  image: ../assets/beers/pale-ale.jpg
   alt: Beerland Pale Ale label
   summary: Bright and balanced.
 

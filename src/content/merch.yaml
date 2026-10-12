@@ -42,10 +42,10 @@
   variants: true
   detail: Wear it plain with the Beerland badge, or flip it inside out for a print based on one of our core range labels. Use the arrows to see every option.
   views:
+    - { label: Whittys Draught print · Black, image: ../assets/merch/bucket-reversible-whittys-black.jpg }
+    - { label: Whittys Draught print · White }
     - { label: Easy Tiger print · Black }
     - { label: Easy Tiger print · White }
-    - { label: Whittys Draught print · Black }
-    - { label: Whittys Draught print · White }
     - { label: Pale Ale print · Black }
     - { label: Pale Ale print · White }
     - { label: IPA print · Black }
