@@ -6,6 +6,7 @@ import BeerCarousel from '../components/BeerCarousel.astro';
 import Signup from '../components/Signup.astro';
 import whitfordsLogo from '../assets/brand/whitfords-logo.png';
 import kenPhoto from '../assets/photos/ken-aiba.jpg';
+import trophies from '../assets/photos/trophies.jpg';
 // Emu Bitter is a third-party trademark (Asahi). Once the owner has approved its use,
 // uncomment this import and pass `src={emuSign}` to the Emu Bitter Picture below.
 // import emuSign from '../assets/photos/emu-bitter-sign.jpg';
@@ -81,6 +82,17 @@ const [padrino, godfather] = beers.filter((b) => b.data.faceOff).map((b) => b.da
           </div>
         </article>
       ))}
+    </div>
+  </section>
+
+  <section class="wrap" aria-labelledby="awards-title" style="padding-bottom: 96px">
+    <div class="awards card">
+      <Picture src={trophies} alt="Beerland's 2022 Australian International Beer Awards trophies for Blueberry Clouds, with the Perth Royal Beer Awards cup for Mosaic Smash" width={1200} class="awards__img" />
+      <div class="awards__text stack">
+        <span class="eyebrow eyebrow--sm">Award winning</span>
+        <h2 id="awards-title" class="display" style="font-size: clamp(32px, 3.6vw, 46px); line-height: 1.02">Champion Australian Beer</h2>
+        <p class="body">At the 2022 Australian International Beer Awards, Beerland Blueberry Clouds was named Champion Australian Beer and Best Fruit Beer. The same year, our Mosaic Smash took Best India Pale Ale (packaged) at the Perth Royal Beer Awards.</p>
+      </div>
     </div>
   </section>
 
@@ -208,6 +220,9 @@ const [padrino, godfather] = beers.filter((b) => b.data.faceOff).map((b) => b.da
   .core__notes[open] summary::after { content: '–'; }
   .core__notes p { margin-top: 10px; font-size: 14px; line-height: 1.55; color: var(--text-muted); }
 
+  .awards { display: flex; flex-wrap: wrap; align-items: stretch; overflow: hidden; }
+  .awards :global(.awards__img) { flex: 1.4 1 420px; min-width: 0; width: 100%; min-height: 300px; object-fit: cover; }
+  .awards__text { flex: 1 1 340px; justify-content: center; gap: 14px; padding: clamp(28px, 4vw, 52px); }
   .paddle { background: var(--cream); color: var(--bg); }
   .paddle__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 40px; }
   .paddle__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 20px; }

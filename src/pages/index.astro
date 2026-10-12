@@ -22,7 +22,7 @@ const posterImg = await getImage({ src: poster, width: 1200, format: 'webp' });
 const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/photos/*.{jpg,jpeg,png,webp}', { eager: true });
 const photo = (name: string) => Object.entries(photos).find(([path]) => path.includes(`/${name}.`))?.[1].default;
 const tiles = [
-  { href: 'where-to-buy/', image: photo('venue'), note: 'Photo: beer in a venue', eyebrow: 'Thirsty?', title: 'Where to buy', cta: 'Find a stockist →' },
+  { href: 'where-to-buy/', image: photo('venue-wbc-night'), note: 'Photo: Whitfords Brewing Co.', eyebrow: 'Thirsty?', title: 'Where to buy', cta: 'Find a stockist →' },
   { href: 'merch/', image: photo('merch-flatlay'), note: 'Photo: merch flat-lay', eyebrow: 'Rep the brand', title: 'Merch', cta: 'Shop merch →' },
 ];
 ---
