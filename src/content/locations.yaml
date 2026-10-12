@@ -11,6 +11,7 @@
   hours: 11am – late, every day
   blurb: Every Beerland beer is brewed here. Grab a tasting paddle of the core range, a pint straight from the tanks, or take-away Canimals.
   mapsUrl: https://www.google.com/maps/search/?api=1&query=Whitfords+Brewing+Co+Westfield+Whitford+City+Hillarys
+  logo: ../assets/brand/whitfords-logo.png
   pin: { x: 39, y: 22, label: Whitfords Brewing Co. }
 
 - id: fremantle-beerfest

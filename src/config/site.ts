@@ -31,7 +31,7 @@ export const site = {
   },
 
   social: {
-    instagram: '', // [INSTAGRAM URL] e.g. https://www.instagram.com/beerlandbrewing/
+    instagram: 'https://www.instagram.com/beerlandbrewing/',
     facebook: '', // [FACEBOOK URL]
   },
 

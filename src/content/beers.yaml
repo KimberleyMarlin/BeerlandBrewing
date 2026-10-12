@@ -10,7 +10,7 @@
   tag: Face Off · Now pouring at WBC
   colour: '#C9622F'
   faceOff: true
-  # image: ../assets/beers/pineapple-padrino.jpg
+  image: ../assets/beers/pineapple-padrino.jpg
   alt: 'Pineapple Padrino can label: a cigar-smoking pineapple in a tropical shirt among palm trees'
   summary: Don Pineapple rules the shipping docks with a smooth, sweet, fast-talking operation. He keeps his circle tight and his liquid gold moving fast.
   notes:
@@ -61,7 +61,7 @@
   abv: 5.8
   tag: Beerfest exclusive · from 13 Nov
   colour: '#B8432F'
-  # image: ../assets/beers/jurassic-fog.jpg
+  image: ../assets/beers/jurassic-fog.jpg
   alt: 'Jurassic Fog can label: dinosaurs silhouetted against an orange sky and jungle'
   summary: A vibrant, pillowy juice bomb blending tropical sweetness with bright citrus. Fermented with London Fog yeast, it pours hazy and full-bodied with a velvety finish, and a Citra dry hop during active fermentation unlocks deep layers of mango and passionfruit.
   notes:
@@ -70,54 +70,80 @@
     - { label: Yeast, value: London Fog }
     - { label: Hops, value: 'Citra, El Dorado, Vic Secret' }
 
-# ---- Core range (abv: null shows "[X.X]%" until the real figure is filled in)
+# ---- Core range
 
 - id: pale-ale
   name: Pale Ale
   range: core
   style: Australian Pale Ale
-  abv: null
+  abv: 5.0
   colour: '#4DB848'
   image: ../assets/beers/pale-ale.jpg
   alt: Beerland Pale Ale label
   summary: Bright and balanced.
+  notes:
+    - An aromatic blend of Galaxy and Cascade hops introduced at different stages of the brewing process, showcases aromas of tropical and citrus fruits balanced by a grassy hop bitterness. It has a light to medium body with a lingering finish that leaves you wanting more.
+  specs:
+    - { label: IBU, value: '26' }
+    - { label: Hops, value: 'Galaxy, Cascade' }
 
 - id: whittys-draught
   name: Whittys Draught
   range: core
   style: Pale Lager
-  abv: null
+  abv: 4.8
   colour: '#25385F'
   image: ../assets/beers/whittys-draught.jpg
   alt: Whittys Draught label
-  summary: Crisp and refreshing.
+  summary: Crisp and refreshingly bitter.
+  notes:
+    - The addition of noble hops to the kettle provides this lager with a crisp and refreshing bitterness. Imported German malts add complexity and a subtle sweetness whilst staying true to the style of a classic lager — perfect for a hot summer's day. Or any other time!
+  specs:
+    - { label: IBU, value: '24' }
+    - { label: Hops, value: 'Wakatu, Saaz' }
 
 - id: easy-tiger
   name: Easy Tiger
   range: core
   style: Mid-Strength Summer Ale
-  abv: null
-  colour: '#2A2119'
-  # image: ../assets/beers/easy-tiger.jpg
+  abv: 3.5
+  colour: '#F0A32B'
+  image: ../assets/beers/easy-tiger.jpg
   alt: Easy Tiger label
   summary: Refreshing and hoppy.
+  notes:
+    - Straight off the bat with Australian pale, wheat and cara malts for that full beery taste and mouthfeel we all love. A smattering of Cascade hops in the kettle and an El Dorado dry hop present a familiar refreshing bitterness, while only tasting a little bit like flowers.
+  specs:
+    - { label: IBU, value: '23' }
+    - { label: Hops, value: 'Cascade, El Dorado' }
 
 - id: james-st-juice
   name: James St Juice
   range: core
   style: New England Pale Ale
-  abv: null
-  colour: '#2A2119'
-  # image: ../assets/beers/james-st-juice.jpg
+  abv: 4.8
+  colour: '#FFD93B'
+  image: ../assets/beers/james-st-juice.jpg
   alt: James St Juice label
   summary: A thick golden haze with pineapple, passionfruit, orange and mango on the nose.
+  notes:
+    - Our New England inspired pale ale has all the hallmarks of a tropical fruit juice, pouring a thick golden haze with pineapple, passionfruit, orange and mango on the nose.
+    - A silky mouthfeel from oats and torrified wheat lend to a surprisingly dry finish, with just enough bitterness to let you know it's still beer.
+  specs:
+    - { label: IBU, value: '17' }
+    - { label: Hops, value: 'Citra, Galaxy, Mosaic' }
 
 - id: india-pale-ale
   name: India Pale Ale
   range: core
   style: American-Style IPA
-  abv: null
-  colour: '#2A2119'
-  # image: ../assets/beers/india-pale-ale.jpg
+  abv: 6.0
+  colour: '#B23A8C'
+  image: ../assets/beers/india-pale-ale.jpg
   alt: Beerland India Pale Ale label
   summary: Aromatic and hoppy.
+  notes:
+    - This golden-hued IPA channels the soul of the US West Coast. Large additions of Centennial, Sequoia and Mosaic hops provide bold notes of citrus, tropical fruit and fresh pine resin. A firm, lingering bitterness ties everything together in a highly balanced package.
+  specs:
+    - { label: IBU, value: '55' }
+    - { label: Hops, value: 'Centennial, Mosaic, Sequoia' }

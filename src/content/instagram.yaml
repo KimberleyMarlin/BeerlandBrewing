@@ -1,20 +1,22 @@
 # Photos for the "Tag us on Instagram" grid on the home page, one list per
 # hashtag. Six per tag looks best; missing images show a placeholder tile.
+# These are stills from the brand videos standing in until a live hashtag
+# feed (e.g. Curator.io, EmbedSocial, Elfsight) is connected.
 
 - id: beerland
   posts:
+    - { image: ../assets/photos/insta-a1.jpg }
     - { image: ../assets/photos/tap-pour.jpg }
-    - { image: ../assets/photos/cheers.jpg }
     - { image: ../assets/photos/food.jpg }
-    - { image: ../assets/photos/laughing.jpg }
-    - {}
-    - {}
+    - { image: ../assets/photos/insta-a4.jpg }
+    - { image: ../assets/photos/cheers.jpg }
+    - { image: ../assets/photos/insta-a6.jpg }
 
 - id: beerlandbrewing
   posts:
-    - {}
-    - {}
-    - {}
-    - {}
-    - {}
-    - {}
+    - { image: ../assets/photos/insta-b1.jpg }
+    - { image: ../assets/photos/laughing.jpg }
+    - { image: ../assets/photos/venue.jpg }
+    - { image: ../assets/photos/insta-b5.jpg }
+    - { image: ../assets/photos/insta-b6.jpg }
+    - { image: ../assets/photos/insta-a8.jpg }

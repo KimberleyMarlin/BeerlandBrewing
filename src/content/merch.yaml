@@ -11,7 +11,7 @@
   sizes: [S, M, L, XL, XXL]
   views:
     - { label: Front, image: ../assets/merch/tee-white-front.jpg }
-    - { label: Back }
+    - { label: Back, image: ../assets/merch/tee-white-back.jpg }
 
 - id: tee-black
   name: Periodic Table of Beers Tee
@@ -32,7 +32,7 @@
   detail: Small badge on the chest, big badge across the back.
   sizes: [S, M, L, XL, XXL]
   views:
-    - { label: Front }
+    - { label: Front, image: ../assets/merch/crew-front.jpg }
     - { label: Back, image: ../assets/merch/crew-back.jpg }
 
 - id: windbreaker
@@ -53,16 +53,16 @@
   variants: true
   detail: Wear it plain with the Beerland badge, or flip it inside out for a print based on one of our core range labels. Use the arrows to see every option.
   views:
-    - { label: Whittys Draught print · Black, image: ../assets/merch/bucket-reversible-whittys-black.jpg }
-    - { label: Whittys Draught print · White }
-    - { label: Easy Tiger print · Black }
-    - { label: Easy Tiger print · White }
-    - { label: Pale Ale print · Black }
-    - { label: Pale Ale print · White }
-    - { label: IPA print · Black }
-    - { label: IPA print · White }
-    - { label: James St Juice print · Black }
-    - { label: James St Juice print · White }
+    - { label: Easy Tiger print · Black, image: ../assets/merch/bucket-easy-tiger-black.jpg }
+    - { label: Easy Tiger print · White, image: ../assets/merch/bucket-easy-tiger-white.jpg }
+    - { label: Whittys Draught print · Black, image: ../assets/merch/bucket-whittys-draught-black.jpg }
+    - { label: Whittys Draught print · White, image: ../assets/merch/bucket-whittys-draught-white.jpg }
+    - { label: Pale Ale print · Black, image: ../assets/merch/bucket-pale-ale-black.jpg }
+    - { label: Pale Ale print · White, image: ../assets/merch/bucket-pale-ale-white.jpg }
+    - { label: IPA print · Black, image: ../assets/merch/bucket-ipa-black.jpg }
+    - { label: IPA print · White, image: ../assets/merch/bucket-ipa-white.jpg }
+    - { label: James St Juice print · Black, image: ../assets/merch/bucket-james-st-juice-black.jpg }
+    - { label: James St Juice print · White, image: ../assets/merch/bucket-james-st-juice-white.jpg }
 
 - id: bucket-black
   name: Bucket Hat
@@ -71,7 +71,7 @@
   colour: Black
   detail: Beerland badge on the front. [Size / fit info]
   views:
-    - { label: Front }
+    - { label: Front, image: ../assets/merch/bucket-black.jpg }
 
 - id: bucket-white
   name: Bucket Hat
@@ -80,7 +80,7 @@
   colour: White
   detail: Beerland badge on the front. [Size / fit info]
   views:
-    - { label: Front }
+    - { label: Front, image: ../assets/merch/bucket-white.jpg }
 
 - id: cap-washed
   name: Enzyme Washed Cap
@@ -89,7 +89,7 @@
   colour: Washed Charcoal
   detail: Six-panel cap with the Beerland badge. [Size / fit info]
   views:
-    - { label: Front }
+    - { label: Front, image: ../assets/merch/cap-washed.jpg }
 
 - id: cap-corduroy
   name: Corduroy Cap
@@ -107,4 +107,4 @@
   colour: Black
   detail: Insulated carry bag with a shoulder strap and built-in bottle opener.
   views:
-    - { label: Front }
+    - { label: Front, image: ../assets/merch/cooler-bag.jpg }

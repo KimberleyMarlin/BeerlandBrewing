@@ -29,7 +29,7 @@ const locations = await Promise.all(
           <article class="wtb__card stack" id={`loc-${id}`} data-loc={id} data-active={i === 0 ? '' : undefined} style={`--edge: ${edge}`}>
             {loc.kind === 'brewery' ? (
               <div class="wtb__brewery">
-                <Picture src={loc.logo} alt={loc.name} placeholder="Venue logo" style="width: 120px; height: 120px; flex: 0 0 auto" />
+                <Picture src={loc.logo} alt={loc.name} width={240} placeholder="Venue logo" style={`width: 120px; height: ${loc.logo ? "auto" : "120px"}; flex: 0 0 auto`} />
                 <div class="stack" style="flex: 1 1 260px; gap: 8px">
                   <span class="eyebrow eyebrow--sm">{loc.badge}</span>
                   <h2 class="display display--md">{loc.name}</h2>

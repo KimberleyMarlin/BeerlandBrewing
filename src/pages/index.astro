@@ -9,7 +9,8 @@ import Picture from '../components/Picture.astro';
 import BeerCarousel from '../components/BeerCarousel.astro';
 import Signup from '../components/Signup.astro';
 import badge from '../assets/brand/badge.svg';
-import poster from '../assets/photos/tap-pour.jpg';
+import poster from '../assets/photos/hero-poster.jpg';
+import whitfordsLogo from '../assets/brand/whitfords-logo.png';
 import { site } from '../config/site';
 import { url } from '../scripts/url';
 
@@ -86,7 +87,7 @@ const tiles = [
   <section class="story wrap">
     <div class="story__brewed stack">
       <span class="eyebrow eyebrow--sm">Brewed at</span>
-      <Picture alt="Whitfords Brewing Co." placeholder="Whitfords logo" style="width: 160px; height: 160px" />
+      <Picture src={whitfordsLogo} alt="Whitfords Brewing Co." width={320} style="width: 160px; height: auto" />
     </div>
     <div class="stack" style="flex: 1 1 420px; gap: 16px">
       <div class="eyebrow">Hand crafted in WA</div>

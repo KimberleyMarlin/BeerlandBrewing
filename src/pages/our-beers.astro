@@ -4,6 +4,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Picture from '../components/Picture.astro';
 import BeerCarousel from '../components/BeerCarousel.astro';
 import Signup from '../components/Signup.astro';
+import whitfordsLogo from '../assets/brand/whitfords-logo.png';
+import kenPhoto from '../assets/photos/ken-aiba.jpg';
+// Emu Bitter is a third-party trademark (Asahi). Once the owner has approved its use,
+// uncomment this import and pass `src={emuSign}` to the Emu Bitter Picture below.
+// import emuSign from '../assets/photos/emu-bitter-sign.jpg';
 import { site } from '../config/site';
 import { formatStyle } from '../scripts/format';
 
@@ -62,6 +67,17 @@ const [padrino, godfather] = beers.filter((b) => b.data.faceOff).map((b) => b.da
             <h3 class="display display--sm">{beer.name}</h3>
             <span class="label accent" style="letter-spacing: 1.5px">{formatStyle(beer.style, beer.abv)}</span>
             <p class="body" style="font-size: 15px; line-height: 1.5">{beer.summary}</p>
+            {beer.specs.length > 0 && (
+              <dl class="core__specs">
+                {beer.specs.map((sp) => <div><dt>{sp.label}</dt><dd>{sp.value}</dd></div>)}
+              </dl>
+            )}
+            {beer.notes.length > 0 && (
+              <details class="core__notes">
+                <summary>Tasting notes</summary>
+                {beer.notes.map((n) => <p>{n}</p>)}
+              </details>
+            )}
           </div>
         </article>
       ))}
@@ -96,10 +112,14 @@ const [padrino, godfather] = beers.filter((b) => b.data.faceOff).map((b) => b.da
         <div class="eyebrow">Hand crafted in WA</div>
         <h2 id="brewer-title" class="display display--lg">Our Brewers</h2>
       </div>
+      <div class="brewers__brewed">
+        <span class="eyebrow eyebrow--sm">Brewed at</span>
+        <Picture src={whitfordsLogo} alt="Whitfords Brewing Co." width={200} style="width: 96px; height: auto" />
+      </div>
     </div>
 
     <div class="brewers__strip">
-      <Picture alt="Ken Arrowsmith holding a trophy at the Australian International Beer Awards" placeholder="Photo: Ken with trophy" class="brewers__photo" />
+      <Picture src={kenPhoto} alt="Ken Arrowsmith holding a trophy at the Australian International Beer Awards" width={640} class="brewers__photo" style="object-position: 50% 15%" />
       <Picture alt="Vintage Emu Bitter sign featuring the bearded brewer illustration modelled on Ken" placeholder="Photo: Emu Bitter sign" class="brewers__photo" />
       <blockquote class="stack brewers__quote">
         <span class="eyebrow eyebrow--sm eyebrow--dark">The original face of Emu Bitter</span>
@@ -173,6 +193,20 @@ const [padrino, godfather] = beers.filter((b) => b.data.faceOff).map((b) => b.da
 
   .core { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr)); gap: 20px; }
   .core :global(.core__label) { width: 100%; aspect-ratio: 512 / 794; object-fit: cover; }
+  .core__specs { margin: 6px 0 0; padding-top: 10px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; }
+  .core__specs div { display: flex; flex-direction: column; gap: 1px; }
+  .core__specs dt { font-family: var(--font-label); font-weight: 600; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-faint); }
+  .core__specs dd { margin: 0; font-size: 14px; }
+  .core__notes { margin-top: 4px; }
+  .core__notes summary {
+    display: inline-flex; align-items: center; min-height: 44px; cursor: pointer; list-style: none;
+    font-family: var(--font-label); font-weight: 700; font-size: 14px; letter-spacing: 2px; text-transform: uppercase;
+    border-bottom: 2px solid var(--accent); align-self: flex-start;
+  }
+  .core__notes summary::-webkit-details-marker { display: none; }
+  .core__notes summary::after { content: '+'; margin-left: 8px; color: var(--accent); }
+  .core__notes[open] summary::after { content: '–'; }
+  .core__notes p { margin-top: 10px; font-size: 14px; line-height: 1.55; color: var(--text-muted); }
 
   .paddle { background: var(--cream); color: var(--bg); }
   .paddle__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 40px; }
@@ -181,6 +215,7 @@ const [padrino, godfather] = beers.filter((b) => b.data.faceOff).map((b) => b.da
   .paddle__name { font-family: var(--font-eyebrow); font-stretch: 125%; font-weight: 900; font-size: 22px; text-transform: uppercase; color: var(--bg); }
 
   .brewers__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 40px; }
+  .brewers__brewed { display: flex; align-items: center; gap: 16px; }
   .brewers__strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); background: var(--cream); color: var(--bg); }
   .brewers__strip :global(.brewers__photo) { width: 100%; aspect-ratio: 1; object-fit: cover; }
   .brewers__quote { margin: 0; padding: clamp(24px, 3vw, 40px); justify-content: center; gap: 16px; }
