@@ -12,6 +12,7 @@ import trophies from '../assets/photos/trophies.jpg';
 // import emuSign from '../assets/photos/emu-bitter-sign.jpg';
 import { site } from '../config/site';
 import { formatStyle } from '../scripts/format';
+import { url } from '../scripts/url';
 
 const beers = await getOrdered('beers');
 const limited = beers.filter((b) => b.data.range === 'limited');
@@ -103,7 +104,7 @@ const [padrino, godfather] = beers.filter((b) => b.data.faceOff).map((b) => b.da
           <div class="eyebrow eyebrow--dark">At {site.brewery.name}</div>
           <h2 class="display" style="font-size: clamp(34px, 4.5vw, 54px); line-height: 1.02">Try the paddle.<br />Take home a Canimal.</h2>
         </div>
-        <a href={site.brewery.paddleUrl} class="btn btn--dark btn--lg">View tasting notes</a>
+        <a href={url('tasting-notes/')} class="btn btn--dark btn--lg">View tasting notes</a>
       </div>
       <div class="paddle__grid">
         <div class="paddle__card">

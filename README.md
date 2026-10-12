@@ -9,7 +9,7 @@ Most changes don't need any code. Edit these files directly on GitHub (pencil ic
 | What | File |
 | --- | --- |
 | Address, hours, social links, licence/ABN, next-drop countdown, accent colour, mailing list | `src/config/site.ts` |
-| Beers (core range + limited releases) | `src/content/beers.yaml` |
+| Beers (core range + limited releases); also feeds the Tasting Notes page | `src/content/beers.yaml` |
 | Merch products and prices | `src/content/merch.yaml` |
 | Where to Buy locations and map pins | `src/content/locations.yaml` |
 | Instagram grid photos | `src/content/instagram.yaml` |

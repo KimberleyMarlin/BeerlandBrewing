@@ -27,7 +27,6 @@ export const site = {
     hours: '11am – late, every day',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Whitfords+Brewing+Co+Westfield+Whitford+City+Hillarys',
     bookingUrl: '', // [BOOKING LINK] — the "Book a table" button is hidden until this is set
-    paddleUrl: 'https://www.beerland.com.au/paddle/',
   },
 
   social: {
