@@ -15,7 +15,7 @@ export const site = {
    */
   indexable: false,
 
-  /** The countdown bar on the home page. Once the date passes it shows "Online now!". */
+  /** The countdown bar on the home page. Once the date passes it shows "Pouring now!". */
   nextDrop: {
     title: 'Jurassic Fog & Guava Lava',
     date: '2026-11-13T12:00:00+08:00',
