@@ -1,0 +1,63 @@
+---
+import '../styles/global.css';
+import AgeGate from '../components/AgeGate.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../config/site';
+import { url } from '../scripts/url';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Nav item to highlight, e.g. 'merch/' */
+  current?: string;
+  /** Hide the standard nav (the home page draws its own over the video) */
+  bareNav?: boolean;
+  cart?: boolean;
+}
+const { title, description = site.description, current, bareNav = false, cart = false } = Astro.props;
+const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | Small-batch beer, brewed in WA`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en-AU" style={`--accent: ${site.accent}`}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  {!site.indexable && <meta name="robots" content="noindex, nofollow" />}
+  <link rel="canonical" href={canonical} />
+  <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
+  <meta name="theme-color" content="#17130F" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content={site.name} />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:locale" content="en_AU" />
+
+  <!-- Age check: decide before first paint so the page never flashes underneath -->
+  <script is:inline>
+    try { if (!localStorage.getItem('bl_age') && !sessionStorage.getItem('bl_age')) document.documentElement.classList.add('age-check'); }
+    catch (e) { document.documentElement.classList.add('age-check'); }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=Archivo:wdth,wght@62..125,100..900&display=swap" />
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div id="page">
+    {!bareNav && <Nav current={current} cart={cart} />}
+    <slot name="header" />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </div>
+  <slot name="overlay" />
+  <AgeGate />
+</body>
+</html>

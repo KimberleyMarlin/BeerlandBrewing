@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../scripts/url';
+---
+<BaseLayout title="Page not found">
+  <section class="wrap stack" style="padding-top: 120px; padding-bottom: 140px; gap: 20px; align-items: flex-start">
+    <div class="eyebrow">Error 404</div>
+    <h1 class="display display--xl">This keg's empty</h1>
+    <p class="lede">We couldn't find that page. It might have moved, or the link might be wrong.</p>
+    <a href={url()} class="btn btn--solid btn--lg">Back to home</a>
+  </section>
+</BaseLayout>

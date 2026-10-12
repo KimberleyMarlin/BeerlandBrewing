@@ -1,0 +1,20 @@
+# Photos for the "Tag us on Instagram" grid on the home page, one list per
+# hashtag. Six per tag looks best; missing images show a placeholder tile.
+
+- id: beerland
+  posts:
+    - { image: ../assets/photos/tap-pour.jpg }
+    - { image: ../assets/photos/cheers.jpg }
+    - {}
+    - {}
+    - {}
+    - {}
+
+- id: beerlandbrewing
+  posts:
+    - {}
+    - {}
+    - {}
+    - {}
+    - {}
+    - {}

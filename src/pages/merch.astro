@@ -1,0 +1,301 @@
+---
+import { getOrdered } from '../scripts/content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import Picture from '../components/Picture.astro';
+import Signup from '../components/Signup.astro';
+import { formatPrice } from '../scripts/format';
+
+const products = await getOrdered('merch');
+const categories = ['All', ...new Set(products.map((p) => p.data.category))];
+const cartData = Object.fromEntries(products.map((p) => [p.id, { name: p.data.name, colour: p.data.colour, price: p.data.price }]));
+---
+<BaseLayout title="Merch" current="merch/" cart description="Beerland tees, jumpers, hats and a cooler bag to keep your tinnies cold.">
+  <header class="merch-head wrap">
+    <div class="stack" style="flex: 1 1 520px; gap: 16px">
+      <div class="eyebrow" style="font-size: 16px">Rep the brand</div>
+      <h1 class="display display--xl">Merch</h1>
+      <p class="lede">Tees, jumpers, hats and a cooler bag to keep your tinnies cold.</p>
+    </div>
+    <div role="group" aria-label="Filter by category" class="merch-filter">
+      {categories.map((c, i) => <button type="button" class="chip" aria-pressed={i === 0 ? 'true' : 'false'} data-filter={c}>{c}</button>)}
+    </div>
+  </header>
+
+  <section aria-label="Products" class="wrap" style="padding-bottom: 112px">
+    <div class="products">
+      {products.map(({ id, data: p }) => (
+        <button type="button" class="product card" data-product={id} data-category={p.category} aria-haspopup="dialog" aria-label={`View ${p.name}, ${p.colour}`}>
+          <span class="product__img">
+            <Picture src={p.views[0].image} alt="" width={600} placeholder={`${p.name} photo`} />
+            <span class="product__cat">{p.category}</span>
+            <span class="product__incart" data-incart hidden>In cart</span>
+          </span>
+          <span class="product__info">
+            <span class="product__row">
+              <span class="display" style="font-size: 20px; line-height: 1.15">{p.name}</span>
+              <span class="product__price">{formatPrice(p.price)}</span>
+            </span>
+            <span class="body" style="font-size: 15px">{p.colour}</span>
+            <span class="product__cta">View details →</span>
+          </span>
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <Signup heading="Hear about restocks first" />
+
+  <Fragment slot="overlay">
+    {products.map(({ id, data: p }) => (
+      <dialog class="pd" data-dialog={id} data-variants={p.variants ? '' : undefined} aria-label={p.name}>
+        <div class="pd__inner">
+          <button type="button" class="pd__close" aria-label="Close" data-close><Icon name="close" /></button>
+          <div class="pd__media">
+            <div class="pd__main">
+              {p.views.map((v, i) => (
+                <div class="pd__view" data-view={i} hidden={i !== 0}>
+                  <Picture src={v.image} alt={p.variants ? `${p.name}, ${v.label} outer` : `${p.name} in ${p.colour.toLowerCase()}, ${v.label.toLowerCase()} view`} width={900} placeholder={`${p.name} · ${v.label}`} />
+                </div>
+              ))}
+              {p.views.length > 2 && (
+                <>
+                  <button type="button" class="pd__arrow pd__arrow--l" aria-label="Previous option" data-step="-1"><Icon name="chevron-left" /></button>
+                  <button type="button" class="pd__arrow pd__arrow--r" aria-label="Next option" data-step="1"><Icon name="chevron-right" /></button>
+                  <span class="pd__counter" data-view-counter>1 / {p.views.length}</span>
+                </>
+              )}
+            </div>
+            {p.views.length > 1 && (
+              <div role="group" aria-label="Product options" class="pd__thumbs">
+                {p.views.map((v, i) => (
+                  <button type="button" aria-label={p.variants ? v.label : `${v.label} view`} aria-pressed={i === 0 ? 'true' : 'false'} data-thumb={i} data-label={v.label}>
+                    <Picture src={v.image} alt="" width={144} placeholder="" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <div class="pd__info stack">
+            <span class="label accent" style="font-size: 14px">{p.category}</span>
+            <h2 class="display" style="font-size: clamp(30px, 3.5vw, 40px); line-height: 1.05">{p.name}</h2>
+            <span class="pd__price">{formatPrice(p.price)}</span>
+            <p class="body" style="font-size: 16px">
+              <span data-colour-line>{p.variants ? `Option: ${p.views[0].label} outer` : `Colour: ${p.colour}`}</span><br />{p.detail}
+            </p>
+            {p.sizes && (
+              <div class="stack" style="gap: 8px">
+                <span class="label" style="font-size: 14px; color: var(--text-muted)">Size</span>
+                <div role="group" aria-label="Size" class="pd__sizes">
+                  {p.sizes.map((z) => <button type="button" class="pd__size" aria-pressed={z === 'M' ? 'true' : 'false'} data-size={z}>{z}</button>)}
+                </div>
+              </div>
+            )}
+            <button type="button" class="btn btn--solid pd__add" data-add>Add to cart</button>
+          </div>
+        </div>
+      </dialog>
+    ))}
+
+    <dialog class="cart" data-cart aria-labelledby="cart-title">
+      <div class="cart__inner stack">
+        <div class="cart__head">
+          <h2 id="cart-title" class="display" style="font-size: 28px">Your cart</h2>
+          <button type="button" class="pd__close" style="position: static" aria-label="Close cart" data-close><Icon name="close" /></button>
+        </div>
+        <p class="body" data-cart-empty>Nothing in here yet.</p>
+        <ul class="cart__list" data-cart-list></ul>
+        <div class="cart__total" data-cart-total-row hidden><span>Total</span><span data-cart-total></span></div>
+        <p class="cart__note">Online checkout is coming soon. In the meantime, grab merch over the bar at Whitfords Brewing Co.</p>
+      </div>
+    </dialog>
+  </Fragment>
+</BaseLayout>
+
+<script define:vars={{ cartData }} is:inline>
+  window.__merch = cartData;
+</script>
+
+<script>
+  type Item = { name: string; colour: string; price: number | null };
+  const products: Record<string, Item> = (window as any).__merch;
+  const KEY = 'bl_cart';
+  let cart: Record<string, string> = {};
+  try { cart = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch {}
+  for (const id of Object.keys(cart)) if (!products[id]) delete cart[id];
+
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(cart)); } catch {} };
+  const money = (n: number) => `$${n % 1 ? n.toFixed(2) : n}`;
+
+  function render() {
+    const ids = Object.keys(cart);
+    document.querySelectorAll('[data-cart-count]').forEach((el) => (el.textContent = String(ids.length)));
+    document.querySelectorAll('[data-cart-open]').forEach((el) => el.setAttribute('aria-label', `Cart, ${ids.length} ${ids.length === 1 ? 'item' : 'items'}`));
+    document.querySelectorAll<HTMLElement>('[data-product]').forEach((card) => {
+      card.querySelector<HTMLElement>('[data-incart]')!.hidden = !cart[card.dataset.product!];
+    });
+    document.querySelectorAll<HTMLDialogElement>('[data-dialog]').forEach((dlg) => {
+      const btn = dlg.querySelector<HTMLButtonElement>('[data-add]')!;
+      const inCart = !!cart[dlg.dataset.dialog!];
+      btn.textContent = inCart ? 'In your cart — remove' : 'Add to cart';
+      btn.classList.toggle('btn--solid', !inCart);
+      btn.classList.toggle('pd__add--in', inCart);
+    });
+
+    const list = document.querySelector<HTMLElement>('[data-cart-list]')!;
+    list.replaceChildren(...ids.map((id) => {
+      const p = products[id];
+      const li = document.createElement('li');
+      li.innerHTML = `<span><strong></strong><br><small></small></span><span class="cart__price"></span><button type="button" class="cart__remove">Remove</button>`;
+      li.querySelector('strong')!.textContent = p.name;
+      li.querySelector('small')!.textContent = `${p.colour} · ${cart[id]}`;
+      li.querySelector('.cart__price')!.textContent = p.price == null ? 'Price TBC' : money(p.price);
+      li.querySelector('button')!.addEventListener('click', () => { delete cart[id]; save(); render(); });
+      return li;
+    }));
+    document.querySelector<HTMLElement>('[data-cart-empty]')!.hidden = ids.length > 0;
+    const known = ids.map((id) => products[id].price).filter((n): n is number => n != null);
+    const totalRow = document.querySelector<HTMLElement>('[data-cart-total-row]')!;
+    totalRow.hidden = ids.length === 0;
+    document.querySelector('[data-cart-total]')!.textContent = money(known.reduce((a, b) => a + b, 0)) + (known.length < ids.length ? ' + TBC' : '');
+  }
+
+  // Category filter
+  document.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const f = chip.dataset.filter;
+      document.querySelectorAll('[data-filter]').forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+      document.querySelectorAll<HTMLElement>('[data-product]').forEach((card) => {
+        card.hidden = f !== 'All' && card.dataset.category !== f;
+      });
+    });
+  });
+
+  // Product dialogs
+  document.querySelectorAll<HTMLElement>('[data-product]').forEach((card) => {
+    const dlg = document.querySelector<HTMLDialogElement>(`[data-dialog="${card.dataset.product}"]`)!;
+    card.addEventListener('click', () => dlg.showModal());
+  });
+
+  document.querySelectorAll<HTMLDialogElement>('[data-dialog]').forEach((dlg) => {
+    const id = dlg.dataset.dialog!;
+    const views = [...dlg.querySelectorAll<HTMLElement>('[data-view]')];
+    const thumbs = [...dlg.querySelectorAll<HTMLButtonElement>('[data-thumb]')];
+    const counter = dlg.querySelector('[data-view-counter]');
+    const colourLine = dlg.querySelector('[data-colour-line]');
+    const variants = dlg.hasAttribute('data-variants');
+    let view = 0;
+    let size = dlg.querySelector<HTMLElement>('[data-size][aria-pressed="true"]')?.dataset.size ?? '';
+
+    const show = (i: number) => {
+      view = (i + views.length) % views.length;
+      views.forEach((v, j) => (v.hidden = j !== view));
+      thumbs.forEach((t, j) => t.setAttribute('aria-pressed', String(j === view)));
+      if (counter) counter.textContent = `${view + 1} / ${views.length}`;
+      if (variants && colourLine) colourLine.textContent = `Option: ${thumbs[view]?.dataset.label} outer`;
+    };
+    thumbs.forEach((t, j) => t.addEventListener('click', () => show(j)));
+    dlg.querySelectorAll<HTMLButtonElement>('[data-step]').forEach((b) => b.addEventListener('click', () => show(view + Number(b.dataset.step))));
+
+    dlg.querySelectorAll<HTMLButtonElement>('[data-size]').forEach((b) => b.addEventListener('click', () => {
+      size = b.dataset.size!;
+      dlg.querySelectorAll('[data-size]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    }));
+
+    dlg.querySelector('[data-add]')!.addEventListener('click', () => {
+      if (cart[id]) delete cart[id];
+      else cart[id] = variants ? thumbs[view]?.dataset.label ?? '' : size || 'One size';
+      save(); render();
+    });
+  });
+
+  // Cart dialog
+  const cartDlg = document.querySelector<HTMLDialogElement>('[data-cart]')!;
+  document.querySelectorAll('[data-cart-open]').forEach((b) => b.addEventListener('click', () => cartDlg.showModal()));
+
+  // Shared: close buttons and backdrop clicks
+  document.querySelectorAll<HTMLDialogElement>('dialog').forEach((dlg) => {
+    dlg.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', () => dlg.close()));
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+  });
+
+  render();
+</script>
+
+<style>
+  .merch-head { padding-top: 96px; padding-bottom: 56px; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 28px 48px; }
+  .merch-filter { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 24px; }
+  .product { padding: 0; margin: 0; text-align: left; cursor: pointer; display: flex; flex-direction: column; transition: border-color .15s; }
+  .product[hidden] { display: none; }
+  .product:hover { border-color: var(--accent); }
+  .product:hover .product__cta { color: var(--accent); }
+  .product__img { position: relative; display: block; width: 100%; aspect-ratio: 1; background: #fff; }
+  .product__img :global(img), .product__img :global(.ph) { width: 100%; height: 100%; object-fit: contain; }
+  .product__cat, .product__incart {
+    position: absolute; top: 14px; padding: 6px 12px;
+    font-family: var(--font-label); font-weight: 600; font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  }
+  .product__cat { left: 14px; background: var(--bg); color: var(--accent); }
+  .product__incart { right: 14px; background: var(--accent); color: var(--bg); font-weight: 700; }
+  .product__incart[hidden] { display: none; }
+  .product__info { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 6px; width: 100%; }
+  .product__row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .product__price { font-family: var(--font-label); font-weight: 700; font-size: 19px; letter-spacing: 1px; color: var(--accent); white-space: nowrap; }
+  .product__cta { margin-top: 8px; font-family: var(--font-label); font-weight: 700; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; }
+
+  dialog { padding: 0; border: 0; background: transparent; color: var(--cream); max-width: calc(100vw - 32px); max-height: calc(100dvh - 48px); }
+  dialog::backdrop { background: rgba(10, 8, 6, .85); }
+  .pd { width: 980px; }
+  .pd__inner { position: relative; display: flex; flex-wrap: wrap; background: var(--bg); border: 2px solid var(--accent); }
+  .pd__close {
+    position: absolute; top: 10px; right: 10px; z-index: 2; width: 44px; height: 44px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg); color: var(--cream); border: 1px solid rgba(241, 230, 208, .3);
+  }
+  .pd__media { flex: 1 1 420px; min-width: 0; background: #fff; display: flex; flex-direction: column; }
+  .pd__main { position: relative; }
+  .pd__view[hidden] { display: none; }
+  .pd__view :global(img), .pd__view :global(.ph) { width: 100%; aspect-ratio: 1; object-fit: contain; }
+  .pd__arrow {
+    position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; background: var(--bg); color: var(--cream); border: 0; cursor: pointer;
+  }
+  .pd__arrow--l { left: 12px; }
+  .pd__arrow--r { right: 12px; }
+  .pd__counter {
+    position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); padding: 4px 12px; background: var(--bg);
+    font-family: var(--font-label); font-weight: 600; font-size: 14px; letter-spacing: 2px;
+  }
+  .pd__thumbs { display: flex; gap: 8px; padding: 0 16px 16px; overflow-x: auto; }
+  .pd__thumbs button { flex: 0 0 auto; padding: 0; background: #fff; cursor: pointer; border: 2px solid rgba(23, 19, 15, .15); }
+  .pd__thumbs button[aria-pressed='true'] { border-color: var(--accent); }
+  .pd__thumbs :global(img), .pd__thumbs :global(.ph) { width: 72px; height: 72px; object-fit: contain; padding: 0; }
+  .pd__info { flex: 1 1 340px; padding: 56px clamp(24px, 4vw, 40px) 36px; gap: 14px; }
+  .pd__price { font-family: var(--font-label); font-weight: 700; font-size: 26px; letter-spacing: 1px; color: var(--accent); }
+  .pd__sizes { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pd__size {
+    min-height: 44px; min-width: 52px; padding: 0 12px; cursor: pointer; background: transparent; color: var(--cream);
+    border: 2px solid rgba(241, 230, 208, .3);
+    font-family: var(--font-label); font-weight: 700; font-size: 15px; letter-spacing: 2px;
+  }
+  .pd__size[aria-pressed='true'] { background: var(--cream); color: var(--bg); border-color: var(--cream); }
+  .pd__add { margin-top: 10px; min-height: 56px; font-size: 18px; }
+  .pd__add--in { background: transparent; color: var(--accent); border-color: var(--accent); }
+
+  .cart { width: 520px; }
+  .cart__inner { background: var(--bg); border: 2px solid var(--accent); padding: 28px; gap: 18px; }
+  .cart__head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .cart__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .cart__list :global(li) { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .cart__list :global(small) { color: var(--text-muted); font-size: 14px; }
+  .cart__list :global(.cart__price) { font-family: var(--font-label); font-weight: 700; font-size: 18px; color: var(--accent); }
+  .cart__list :global(.cart__remove) {
+    grid-column: 1; justify-self: start; min-height: 32px; padding: 0; background: none; border: 0; cursor: pointer;
+    color: var(--text-muted); text-decoration: underline; font-size: 14px;
+  }
+  .cart__total { display: flex; justify-content: space-between; font-family: var(--font-label); font-weight: 700; font-size: 20px; letter-spacing: 1px; text-transform: uppercase; }
+  .cart__total[hidden], .cart [hidden] { display: none; }
+  .cart__note { font-size: 14px; line-height: 1.5; color: var(--text-faint); }
+</style>

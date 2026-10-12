@@ -1,0 +1,156 @@
+---
+import { getEntries } from 'astro:content';
+import { getOrdered } from '../scripts/content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Picture from '../components/Picture.astro';
+import Signup from '../components/Signup.astro';
+import { site } from '../config/site';
+import { url } from '../scripts/url';
+
+const locations = await Promise.all(
+  (await getOrdered('locations')).map(async (loc) => ({
+    ...loc,
+    beerEntries: await getEntries(loc.data.beers),
+  })),
+);
+---
+<BaseLayout title="Where to Buy" current="where-to-buy/" description="Drink Beerland fresh at Whitfords Brewing Co. in Hillarys, or catch us at events around Perth.">
+  <header class="wrap stack" style="padding-top: 96px; padding-bottom: 56px; gap: 16px">
+    <div class="eyebrow" style="font-size: 16px">Thirsty?</div>
+    <h1 class="display display--xl">Where to buy</h1>
+    <p class="lede" style="max-width: 640px">Drink it fresh at the source — Whitfords Brewing Co. — and catch us at Fremantle BeerFest this November.</p>
+  </header>
+
+  <section class="wtb wrap" aria-label="Locations" data-wtb>
+    <div class="wtb__list stack">
+      {locations.map(({ id, data: loc, beerEntries }, i) => {
+        const edge = loc.colour ?? 'var(--accent)';
+        return (
+          <article class="wtb__card stack" id={`loc-${id}`} data-loc={id} data-active={i === 0 ? '' : undefined} style={`--edge: ${edge}`}>
+            {loc.kind === 'brewery' ? (
+              <div class="wtb__brewery">
+                <Picture src={loc.logo} alt={loc.name} placeholder="Venue logo" style="width: 120px; height: 120px; flex: 0 0 auto" />
+                <div class="stack" style="flex: 1 1 260px; gap: 8px">
+                  <span class="eyebrow eyebrow--sm">{loc.badge}</span>
+                  <h2 class="display display--md">{loc.name}</h2>
+                  <p class="body" style="line-height: 1.55">{loc.address.map((l) => <>{l}<br /></>)}{loc.hours}</p>
+                </div>
+              </div>
+            ) : (
+              <div class="wtb__event">
+                <div class="stack" style="flex: 1 1 280px; gap: 8px">
+                  <span class="tag" style={`align-self: flex-start; background: ${edge}; color: #FFF6EA`}>{loc.badge}</span>
+                  <h2 class="display" style="margin-top: 4px; font-size: clamp(26px, 3vw, 34px); line-height: 1.05">{loc.name}</h2>
+                  <p class="body" style="line-height: 1.55">{loc.address.join(', ')}</p>
+                </div>
+                {beerEntries.length > 0 && (
+                  <div class="wtb__cans" aria-hidden="true">
+                    {beerEntries.map((b) => (
+                      <Picture src={b.data.image} alt="" width={120} placeholder="" style={`width: 56px; height: 87px; object-fit: cover; border-radius: 3px; padding: 0; background-color: ${b.data.colour}`} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+            <p class="body" style="color: var(--cream-soft)">{loc.blurb}</p>
+            <div class="wtb__actions">
+              {loc.kind === 'brewery' ? (
+                <>
+                  <a href={loc.mapsUrl} class="btn btn--solid" target="_blank" rel="noopener">Get directions</a>
+                  {site.brewery.bookingUrl && <a href={site.brewery.bookingUrl} class="btn btn--line" target="_blank" rel="noopener">Book a table</a>}
+                </>
+              ) : (
+                <>
+                  <a href={url('our-beers/#limited')} class="btn btn--line">Meet the beers</a>
+                  <a href={loc.mapsUrl} class="text-link" style="font-size: 16px" target="_blank" rel="noopener">Get directions</a>
+                </>
+              )}
+            </div>
+          </article>
+        );
+      })}
+    </div>
+
+    <div class="wtb__map">
+      <svg viewBox="0 0 400 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <path d="M150 0 C 160 60, 145 110, 158 160 C 170 210, 150 260, 156 320 C 162 380, 140 420, 132 470 C 126 510, 140 560, 128 640 L 400 640 L 400 0 Z" fill="#2B241D" />
+        <path d="M150 0 C 160 60, 145 110, 158 160 C 170 210, 150 260, 156 320 C 162 380, 140 420, 132 470 C 126 510, 140 560, 128 640" fill="none" stroke="#3E352B" stroke-width="3" />
+        <path d="M136 468 C 170 470, 190 440, 215 430 C 240 420, 255 400, 280 405 C 300 410, 320 395, 345 380 C 365 368, 380 372, 400 360" fill="none" stroke="#1E2A2E" stroke-width="9" stroke-linecap="round" />
+        <g stroke="rgba(241,230,208,.05)" stroke-width="1">
+          <line x1="180" y1="0" x2="180" y2="640" /><line x1="260" y1="0" x2="260" y2="640" /><line x1="340" y1="0" x2="340" y2="640" />
+          <line x1="140" y1="120" x2="400" y2="120" /><line x1="140" y1="260" x2="400" y2="260" /><line x1="140" y1="540" x2="400" y2="540" />
+        </g>
+        <circle cx="300" cy="392" r="4" fill="#8F826D" />
+        <text x="309" y="397" fill="#A99A80" font-family="Barlow Condensed, sans-serif" font-size="14" letter-spacing="2">PERTH</text>
+        <text x="40" y="320" fill="#4E6A72" font-family="Barlow Condensed, sans-serif" font-size="14" letter-spacing="3" transform="rotate(-90 40 320)">INDIAN OCEAN</text>
+      </svg>
+
+      {locations.map(({ id, data: loc }, i) => (
+        <button type="button" class="pin" style={`left: ${loc.pin.x}%; top: ${loc.pin.y}%; --edge: ${loc.colour ?? 'var(--accent)'}`}
+          aria-pressed={i === 0 ? 'true' : 'false'} aria-controls={`loc-${id}`} data-pin={id} data-kind={loc.kind}>
+          <span class="pin__label">{loc.pin.label}</span>
+          <span class="pin__marker">
+            {loc.kind === 'event' && <span class="pin__pulse" aria-hidden="true"></span>}
+            <svg width="34" height="44" viewBox="0 0 34 44" aria-hidden="true">
+              <path d="M17 43s14-14.5 14-26A14 14 0 0 0 3 17c0 11.5 14 26 14 26z" fill="var(--edge)" stroke="#17130F" stroke-width="2" />
+              <circle cx="17" cy="17" r="5.5" fill={loc.kind === 'event' ? '#FFF6EA' : '#17130F'} />
+            </svg>
+          </span>
+        </button>
+      ))}
+      <span class="wtb__scale">Not to scale</span>
+    </div>
+  </section>
+
+  <Signup heading="Get the next drop first" />
+</BaseLayout>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-wtb]');
+  root?.querySelectorAll<HTMLButtonElement>('[data-pin]').forEach((pin) => {
+    pin.addEventListener('click', () => {
+      const id = pin.dataset.pin;
+      root.querySelectorAll('[data-pin]').forEach((p) => p.setAttribute('aria-pressed', String(p === pin)));
+      root.querySelectorAll<HTMLElement>('[data-loc]').forEach((card) => {
+        const on = card.dataset.loc === id;
+        card.toggleAttribute('data-active', on);
+        if (on && matchMedia('(max-width: 940px)').matches) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+  });
+</script>
+
+<style>
+  .wtb { padding-bottom: 104px; display: flex; flex-wrap: wrap; gap: 28px; }
+  .wtb__list { flex: 999 1 520px; min-width: 0; gap: 20px; }
+  .wtb__card {
+    background: var(--surface); padding: clamp(24px, 3vw, 36px); gap: 20px;
+    border: 2px solid var(--line-soft); transition: border-color .2s;
+  }
+  .wtb__card[data-active] { border-color: var(--edge); }
+  .wtb__brewery { display: flex; flex-wrap: wrap; align-items: center; gap: 24px 32px; }
+  .wtb__event { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .wtb__cans { display: flex; gap: 8px; }
+  .wtb__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
+
+  .wtb__map { flex: 1 1 400px; position: relative; min-height: 640px; background: #1E2A2E; border: 1px solid var(--line-soft); overflow: hidden; }
+  .wtb__map svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .wtb__scale { position: absolute; right: 14px; bottom: 12px; font-family: var(--font-label); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #8F826D; }
+
+  .pin {
+    position: absolute; transform: translate(-50%, -100%); padding: 0; background: none; border: 0; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--cream);
+  }
+  .pin__label {
+    padding: 6px 10px; white-space: nowrap; background: var(--bg); color: var(--cream); box-shadow: 0 6px 16px rgba(0, 0, 0, .4);
+    font-family: var(--font-label); font-weight: 700; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .pin[aria-pressed='true'] .pin__label { background: var(--edge); color: var(--bg); }
+  .pin[data-kind='event'][aria-pressed='true'] .pin__label { color: #FFF6EA; }
+  .pin__marker { position: relative; display: flex; justify-content: center; }
+  .pin__pulse {
+    position: absolute; left: 7px; bottom: -6px; width: 20px; height: 12px; border-radius: 50%;
+    background: var(--edge); animation: pulse 1.8s ease-out infinite;
+  }
+  @keyframes pulse { 0% { transform: scale(.6); opacity: .7; } 100% { transform: scale(2.2); opacity: 0; } }
+</style>

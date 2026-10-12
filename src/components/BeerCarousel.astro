@@ -1,0 +1,132 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import Picture from './Picture.astro';
+import { url } from '../scripts/url';
+import { formatStyle } from '../scripts/format';
+
+interface Props { beers: CollectionEntry<'beers'>[]; id?: string; rule?: boolean }
+const { beers, id = 'limited', rule = false } = Astro.props;
+const total = String(beers.length).padStart(2, '0');
+const counter = (i: number) => `${String(i + 1).padStart(2, '0')} / ${total}`;
+---
+<section id={id} class="carousel wrap section stack" aria-roledescription="carousel" aria-labelledby={`${id}-title`} data-carousel>
+  <div class:list={['carousel__head', { 'section-rule': rule }]}>
+    <div class="stack" style="gap: 8px">
+      <div class="eyebrow">Small batch · Limited edition</div>
+      <h2 id={`${id}-title`} class="display display--lg">Limited Releases</h2>
+    </div>
+    <div class="carousel__controls">
+      <span class="carousel__counter" data-counter aria-hidden="true">{counter(0)}</span>
+      <button type="button" class="btn btn--line btn--icon" data-prev aria-label="Previous beer"><Icon name="chevron-left" size={22} /></button>
+      <button type="button" class="btn btn--solid btn--icon" data-next aria-label="Next beer"><Icon name="chevron-right" size={22} /></button>
+    </div>
+  </div>
+
+  <div aria-live="polite">
+    {beers.map(({ data: beer, id: beerId }, i) => (
+      <article class="slide card" aria-roledescription="slide" aria-label={`${counter(i)}: ${beer.name}`} hidden={i !== 0} data-slide>
+        <div class="slide__art" style={`background: ${beer.colour}`}>
+          <Picture src={beer.image} alt={beer.alt} width={560} placeholder={`${beer.name} label`} class="slide__img" />
+        </div>
+        <div class="slide__text stack">
+          <div class="slide__tags">
+            {beer.tag && <span class="tag">{beer.tag}</span>}
+            <span class="tag tag--line">Ltd edition</span>
+          </div>
+          <h3 class="display" style="font-size: clamp(36px, 4vw, 54px)">{beer.name}</h3>
+          <div class="label accent" style="font-size: 18px">{formatStyle(beer.style, beer.abv)} ABV</div>
+          <p class="body">{beer.summary}</p>
+          {beer.notes.length > 0 && (
+            <div id={`${id}-${beerId}-more`} class="stack" style="gap: 14px" hidden data-more>
+              {beer.notes.map((n) => <p class="body">{n}</p>)}
+            </div>
+          )}
+          <dl class="slide__specs">
+            {beer.specs.map((s) => <div><dt>{s.label}</dt><dd>{s.value}</dd></div>)}
+          </dl>
+          <div class="slide__actions">
+            <a href={url('where-to-buy/')} class="btn btn--solid">Where to buy</a>
+            {beer.notes.length > 0 && (
+              <button type="button" class="text-link" aria-expanded="false" aria-controls={`${id}-${beerId}-more`} data-toggle-more>Read more</button>
+            )}
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+
+  <div role="group" aria-label="Choose a beer" class="carousel__dots">
+    {beers.map(({ data: beer }, i) => (
+      <button type="button" aria-label={`Show ${beer.name}`} aria-pressed={i === 0 ? 'true' : 'false'} data-dot={i}><span></span></button>
+    ))}
+  </div>
+  <slot />
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((root) => {
+    const slides = [...root.querySelectorAll<HTMLElement>('[data-slide]')];
+    const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-dot]')];
+    const counter = root.querySelector('[data-counter]');
+    const n = slides.length;
+    let idx = 0;
+
+    const go = (i: number) => {
+      idx = (i + n) % n;
+      slides.forEach((s, j) => {
+        s.hidden = j !== idx;
+        // collapse "read more" when leaving a slide
+        s.querySelector<HTMLElement>('[data-more]')?.setAttribute('hidden', '');
+        const t = s.querySelector('[data-toggle-more]');
+        if (t) { t.setAttribute('aria-expanded', 'false'); t.textContent = 'Read more'; }
+      });
+      dots.forEach((d, j) => d.setAttribute('aria-pressed', String(j === idx)));
+      if (counter) counter.textContent = `${String(idx + 1).padStart(2, '0')} / ${String(n).padStart(2, '0')}`;
+    };
+
+    root.querySelector('[data-prev]')?.addEventListener('click', () => go(idx - 1));
+    root.querySelector('[data-next]')?.addEventListener('click', () => go(idx + 1));
+    dots.forEach((d, j) => d.addEventListener('click', () => go(j)));
+    root.querySelectorAll<HTMLButtonElement>('[data-toggle-more]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const more = document.getElementById(btn.getAttribute('aria-controls')!);
+        const open = btn.getAttribute('aria-expanded') !== 'true';
+        if (more) more.hidden = !open;
+        btn.setAttribute('aria-expanded', String(open));
+        btn.textContent = open ? 'Show less' : 'Read more';
+      });
+    });
+  });
+</script>
+
+<style>
+  .carousel { gap: 28px; }
+  .carousel__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px; }
+  .carousel__controls { display: flex; align-items: center; gap: 12px; }
+  .carousel__counter { min-width: 64px; text-align: right; font-family: var(--font-label); font-weight: 600; font-size: 17px; letter-spacing: 2px; color: var(--text-muted); }
+
+  .slide { display: flex; flex-wrap: wrap; min-height: 580px; }
+  .slide[hidden] { display: none; }
+  .slide__art { flex: 1 1 380px; min-height: 460px; display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
+  .slide__art :global(.slide__img) { height: 400px; width: auto; max-width: 100%; object-fit: contain; border-radius: 6px; box-shadow: 0 24px 48px rgba(0, 0, 0, .45); }
+  .slide__art :global(.ph.slide__img) { width: 258px; background-color: rgba(0, 0, 0, .25); color: var(--cream-soft); }
+  .slide__text { flex: 1.3 1 460px; justify-content: center; gap: 14px; padding: 44px clamp(24px, 4vw, 56px); }
+  .slide__text [hidden] { display: none; }
+  .slide__tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .slide__specs {
+    margin: 0; padding: 14px 0; display: grid; gap: 12px 24px;
+    grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+  .slide__specs div { display: flex; flex-direction: column; gap: 2px; }
+  .slide__specs dt { font-family: var(--font-label); font-weight: 600; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-faint); }
+  .slide__specs dd { margin: 0; font-size: 16px; }
+  .slide__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 4px; }
+  .slide__actions .text-link { font-size: 16px; align-self: center; }
+
+  .carousel__dots { display: flex; justify-content: center; gap: 4px; }
+  .carousel__dots button { width: 44px; height: 44px; padding: 0; display: flex; align-items: center; justify-content: center; background: none; border: 0; cursor: pointer; }
+  .carousel__dots span { display: block; height: 4px; width: 16px; background: rgba(241, 230, 208, .35); transition: width .2s; }
+  .carousel__dots [aria-pressed='true'] span { width: 32px; background: var(--accent); }
+</style>

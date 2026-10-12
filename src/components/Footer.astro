@@ -1,0 +1,64 @@
+---
+import badge from '../assets/brand/badge.svg';
+import Icon from './Icon.astro';
+import { nav, site } from '../config/site';
+import { url } from '../scripts/url';
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="wrap stack footer__inner">
+    <div class="footer__grid">
+      <div class="stack" style="gap: 12px">
+        <img src={badge.src} width="130" height="130" alt="Beerland Brewing" />
+        <span class="footer__muted">Brewed at {site.brewery.name}</span>
+      </div>
+      <div class="stack">
+        <span class="footer__head">Explore</span>
+        {nav.map((item) => <a href={url(item.href)}>{item.label}</a>)}
+        <a href="#signup">Mailing List</a>
+      </div>
+      <div class="stack">
+        <span class="footer__head">Visit the brewery</span>
+        <span class="footer__muted">{site.brewery.name}<br />{site.brewery.address.map((l) => <>{l}<br /></>)}</span>
+        <span class="footer__muted">{site.brewery.hours}</span>
+      </div>
+      <div class="stack">
+        <span class="footer__head">Follow</span>
+        <div class="footer__social">
+          <a href={site.social.instagram || '#'} aria-label="Beerland Brewing on Instagram"><Icon name="instagram" /></a>
+          <a href={site.social.facebook || '#'} aria-label="Beerland Brewing on Facebook"><Icon name="facebook" /></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__legal stack">
+      <p><strong>WARNING:</strong> Under the Liquor Control Act 1988, it is an offence: to sell or supply liquor to a person under the age of 18 years on licensed or regulated premises; or for a person under the age of 18 years to purchase, or attempt to purchase, liquor on licensed or regulated premises. Liquor licence {site.legal.licence} · ABN {site.legal.abn}</p>
+      <p>We acknowledge the Whadjuk Noongar people, Traditional Custodians of the land on which we brew, and pay our respects to Elders past and present.</p>
+      <div class="footer__fine">
+        <span>© {year} Beerland Brewing</span>
+        <a href={url('privacy/')}>Privacy Policy</a>
+        <a href={url('terms/')}>Terms &amp; Conditions</a>
+        <span>Enjoy responsibly.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer { padding: 80px 0 40px; border-top: 4px solid var(--accent); }
+  .footer__inner { gap: 48px; }
+  .footer__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 40px; }
+  .footer__grid .stack { gap: 4px; }
+  .footer__grid a, .footer__muted { padding: 8px 0; }
+  .footer__muted { color: var(--text-muted); font-size: 15px; line-height: 1.5; }
+  .footer__head {
+    margin-bottom: 6px; color: var(--accent);
+    font-family: var(--font-label); font-weight: 700; font-size: 15px; letter-spacing: 3px; text-transform: uppercase;
+  }
+  .footer__social { display: flex; gap: 8px; }
+  .footer__social a { width: 44px; height: 44px; padding: 0; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(241, 230, 208, .3); }
+  .footer__legal { gap: 14px; padding-top: 28px; border-top: 1px solid var(--line); font-size: 13px; line-height: 1.6; color: var(--text-faint); }
+  .footer__legal strong { color: var(--text-muted); }
+  .footer__fine { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+  .footer__fine a { color: var(--text-faint); }
+  .footer__fine a:hover { color: var(--accent); }
+</style>

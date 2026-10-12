@@ -1,0 +1,22 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Signup from '../components/Signup.astro';
+interface Props { title: string; eyebrow: string; description?: string }
+const { title, eyebrow, description } = Astro.props;
+---
+<BaseLayout title={title} description={description}>
+  <article class="wrap text-page">
+    <div class="eyebrow" style="font-size: 16px">{eyebrow}</div>
+    <h1 class="display display--xl">{title}</h1>
+    <div class="text-page__body"><slot /></div>
+  </article>
+  <Signup />
+</BaseLayout>
+
+<style>
+  .text-page { max-width: 860px; padding-top: 96px; padding-bottom: 104px; display: flex; flex-direction: column; gap: 16px; }
+  .text-page__body { margin-top: 24px; font-size: 17px; line-height: 1.7; color: var(--text-muted); }
+  .text-page__body :global(h2) { margin: 32px 0 8px; font-family: var(--font-label); font-weight: 700; font-size: 22px; letter-spacing: 2px; text-transform: uppercase; color: var(--cream); }
+  .text-page__body :global(p) { margin: 0 0 14px; }
+  .text-page__body :global(a) { color: var(--accent); text-decoration: underline; }
+</style>

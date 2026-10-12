@@ -1,0 +1,99 @@
+# Merch products, shown in this order. `price: null` shows "Price TBC".
+# Each product needs at least one view; add `image:` lines as photos arrive
+# (drop the files in src/assets/merch/).
+
+- id: tee
+  name: Periodic Table of Beers Tee
+  category: Apparel
+  price: 40
+  colour: Black
+  detail: Badge on the chest, Periodic Table of Beers print across the back.
+  sizes: [S, M, L, XL, XXL]
+  views:
+    - { label: Front }
+    - { label: Back }
+
+- id: crew
+  name: Logo Crew Jumper
+  category: Apparel
+  price: 70
+  colour: Black
+  detail: Small badge on the chest, big badge across the back.
+  sizes: [S, M, L, XL, XXL]
+  views:
+    - { label: Front }
+    - { label: Back }
+
+- id: windbreaker
+  name: Windbreaker
+  category: Apparel
+  price: 75
+  colour: Black
+  detail: Hooded half-zip pullover with a front pouch pocket and chest badge.
+  sizes: [S, M, L, XL, XXL]
+  views:
+    - { label: Front }
+
+- id: bucket-reversible
+  name: Reversible Bucket Hat
+  category: Headwear
+  price: 25
+  colour: 5 prints · black or white
+  variants: true
+  detail: Wear it plain with the Beerland badge, or flip it inside out for a print based on one of our core range labels. Use the arrows to see every option.
+  views:
+    - { label: Easy Tiger print · Black }
+    - { label: Easy Tiger print · White }
+    - { label: Whittys Draught print · Black }
+    - { label: Whittys Draught print · White }
+    - { label: Pale Ale print · Black }
+    - { label: Pale Ale print · White }
+    - { label: IPA print · Black }
+    - { label: IPA print · White }
+    - { label: James St Juice print · Black }
+    - { label: James St Juice print · White }
+
+- id: bucket-black
+  name: Bucket Hat
+  category: Headwear
+  price: 30
+  colour: Black
+  detail: Beerland badge on the front. [Size / fit info]
+  views:
+    - { label: Front }
+
+- id: bucket-white
+  name: Bucket Hat
+  category: Headwear
+  price: 30
+  colour: White
+  detail: Beerland badge on the front. [Size / fit info]
+  views:
+    - { label: Front }
+
+- id: cap-washed
+  name: Enzyme Washed Cap
+  category: Headwear
+  price: 30
+  colour: Washed Charcoal
+  detail: Six-panel cap with the Beerland badge. [Size / fit info]
+  views:
+    - { label: Front }
+
+- id: cap-corduroy
+  name: Corduroy Cap
+  category: Headwear
+  price: null
+  colour: Black
+  detail: Corduroy cap with the Beerland badge. [Size / fit info]
+  views:
+    - { label: Front, image: ../assets/merch/corduroy-cap.jpg }
+
+- id: cooler
+  name: Cooler Bag
+  category: Accessories
+  price: 50
+  colour: Black
+  detail: Insulated carry bag with a shoulder strap and built-in bottle opener.
+  views:
+    - { label: Front }

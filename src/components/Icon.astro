@@ -1,0 +1,19 @@
+---
+interface Props {
+  name: 'instagram' | 'facebook' | 'chevron-left' | 'chevron-right' | 'close' | 'bag' | 'play' | 'pause';
+  size?: number;
+}
+const { name, size = 20 } = Astro.props;
+---
+<svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true"
+  fill={name === 'play' ? 'currentColor' : 'none'} stroke={name === 'play' ? 'none' : 'currentColor'}
+  stroke-width={name.startsWith('chevron') || name === 'close' || name === 'pause' ? 2.4 : 2}>
+  {name === 'instagram' && <><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" /></>}
+  {name === 'facebook' && <path d="M15 3h-2.5A3.5 3.5 0 0 0 9 6.5V10H6v4h3v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h2z" />}
+  {name === 'chevron-left' && <polyline points="15 5 8 12 15 19" />}
+  {name === 'chevron-right' && <polyline points="9 5 16 12 9 19" />}
+  {name === 'close' && <><line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" /></>}
+  {name === 'bag' && <><path d="M6 7h12l-1 13H7z" /><path d="M9 7a3 3 0 0 1 6 0" /></>}
+  {name === 'play' && <polygon points="7 4 20 12 7 20" />}
+  {name === 'pause' && <><line x1="8" y1="5" x2="8" y2="19" /><line x1="16" y1="5" x2="16" y2="19" /></>}
+</svg>

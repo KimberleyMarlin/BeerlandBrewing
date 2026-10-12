@@ -1,0 +1,123 @@
+# Our beers. `range: core` beers appear in the Core Range grid; `range: limited`
+# beers appear in the Limited Releases carousel (in this order).
+# To add a label image, drop the file in src/assets/beers/ and add an `image:` line.
+
+- id: pineapple-padrino
+  name: Pineapple Padrino
+  range: limited
+  style: Session IPA
+  abv: 4.2
+  tag: Face Off · Now pouring at WBC
+  colour: '#C9622F'
+  faceOff: true
+  # image: ../assets/beers/pineapple-padrino.jpg
+  alt: 'Pineapple Padrino can label: a cigar-smoking pineapple in a tropical shirt among palm trees'
+  summary: Don Pineapple rules the shipping docks with a smooth, sweet, fast-talking operation. He keeps his circle tight and his liquid gold moving fast.
+  notes:
+    - Built on Rahr Pale Malt and heavy flaked oats, aggressively dry-hopped with Citra and Vic Secret and injected with Pineapple Express terpenes. Expect a wave of fresh-cut pineapple chunks that finishes in a heavy cloud of sticky, tropical skunk.
+  specs:
+    - { label: Malt, value: 'Rahr Pale Malt, flaked oats' }
+    - { label: Hops, value: 'Citra, Vic Secret' }
+    - { label: Terpenes, value: Pineapple Express }
+
+- id: grapefruit-godfather
+  name: Grapefruit Godfather
+  range: limited
+  style: Session IPA
+  abv: 4.2
+  tag: Face Off · Now pouring at WBC
+  colour: '#25467F'
+  faceOff: true
+  image: ../assets/beers/grapefruit-godfather.jpg
+  alt: 'Grapefruit Godfather can label: a grapefruit-headed mob boss in a pinstripe suit against a city skyline'
+  summary: The Grapefruit Godfather doesn't do sweet talk. Hardened by the gritty city asphalt, he runs the underground with a sharp wit and a bitter bite.
+  notes:
+    - Same smooth Rahr and oat canvas as his rival, but his operation takes a dark, resinous turn — dry-hopped with Cascade, Strata and Simcoe and loaded with Grapefruit Kush terpenes. A sharp, tart blast of pink grapefruit rind, backed by a deep, peppery, earthy resin finish.
+  specs:
+    - { label: Malt, value: 'Rahr Pale Malt, flaked oats' }
+    - { label: Hops, value: 'Cascade, Strata, Simcoe' }
+    - { label: Terpenes, value: Grapefruit Kush }
+
+- id: guava-lava
+  name: Guava Lava
+  range: limited
+  style: NEIPA
+  abv: 5.8
+  tag: Beerfest exclusive · from 13 Nov
+  colour: '#5E9E57'
+  # image: ../assets/beers/guava-lava.jpg
+  alt: 'Guava Lava can label: a pink volcano erupting over a rainforest'
+  summary: Intense tropical fruit and candy-like hop character. Fermented warm with White Labs Suava and dry hopped mid-fermentation with Superdelic for layers of ripe mango, pink guava and berry candy — with white-wine and passionfruit esters and a soft, pillowy mouthfeel.
+  notes:
+    - A cool, terminal dry hop of Cryo Riwaka and Galaxy adds bright passionfruit, fresh peach and zesty pink grapefruit. The result is a clean, intensely juicy and highly aromatic hazy ale with impressive depth and minimal hop burn.
+  specs:
+    - { label: Yeast, value: White Labs Suava }
+    - { label: Hops, value: 'Superdelic, Cryo Riwaka, Galaxy' }
+
+- id: jurassic-fog
+  name: Jurassic Fog
+  range: limited
+  style: NEIPA
+  abv: 5.8
+  tag: Beerfest exclusive · from 13 Nov
+  colour: '#B8432F'
+  # image: ../assets/beers/jurassic-fog.jpg
+  alt: 'Jurassic Fog can label: dinosaurs silhouetted against an orange sky and jungle'
+  summary: A vibrant, pillowy juice bomb blending tropical sweetness with bright citrus. Fermented with London Fog yeast, it pours hazy and full-bodied with a velvety finish, and a Citra dry hop during active fermentation unlocks deep layers of mango and passionfruit.
+  notes:
+    - A terminal dry hop of El Dorado and Vic Secret adds punchy top notes of sweet pineapple, watermelon candy and a crisp hint of resinous pine. Candy-like fruit sweetness that stays clean and refreshing — an incredibly drinkable, modern NEIPA.
+  specs:
+    - { label: Yeast, value: London Fog }
+    - { label: Hops, value: 'Citra, El Dorado, Vic Secret' }
+
+# ---- Core range (abv: null shows "[X.X]%" until the real figure is filled in)
+
+- id: pale-ale
+  name: Pale Ale
+  range: core
+  style: Australian Pale Ale
+  abv: null
+  colour: '#2A2119'
+  # image: ../assets/beers/pale-ale.jpg
+  alt: Beerland Pale Ale label
+  summary: Bright and balanced.
+
+- id: whittys-draught
+  name: Whittys Draught
+  range: core
+  style: Pale Lager
+  abv: null
+  colour: '#25385F'
+  image: ../assets/beers/whittys-draught.jpg
+  alt: Whittys Draught label
+  summary: Crisp and refreshing.
+
+- id: easy-tiger
+  name: Easy Tiger
+  range: core
+  style: Mid-Strength Summer Ale
+  abv: null
+  colour: '#2A2119'
+  # image: ../assets/beers/easy-tiger.jpg
+  alt: Easy Tiger label
+  summary: Refreshing and hoppy.
+
+- id: james-st-juice
+  name: James St Juice
+  range: core
+  style: New England Pale Ale
+  abv: null
+  colour: '#2A2119'
+  # image: ../assets/beers/james-st-juice.jpg
+  alt: James St Juice label
+  summary: A thick golden haze with pineapple, passionfruit, orange and mango on the nose.
+
+- id: india-pale-ale
+  name: India Pale Ale
+  range: core
+  style: American-Style IPA
+  abv: null
+  colour: '#2A2119'
+  # image: ../assets/beers/india-pale-ale.jpg
+  alt: Beerland India Pale Ale label
+  summary: Aromatic and hoppy.

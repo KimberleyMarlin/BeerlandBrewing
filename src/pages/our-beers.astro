@@ -1,0 +1,189 @@
+---
+import { getOrdered } from '../scripts/content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Picture from '../components/Picture.astro';
+import BeerCarousel from '../components/BeerCarousel.astro';
+import Signup from '../components/Signup.astro';
+import { site } from '../config/site';
+import { formatStyle } from '../scripts/format';
+
+const beers = await getOrdered('beers');
+const limited = beers.filter((b) => b.data.range === 'limited');
+const core = beers.filter((b) => b.data.range === 'core');
+const [padrino, godfather] = beers.filter((b) => b.data.faceOff).map((b) => b.data);
+---
+<BaseLayout title="Our Beers" current="our-beers/" description="Five core beers plus small-batch limited releases every month, brewed onsite at Whitfords Brewing Co.">
+  <header class="page-head wrap">
+    <div class="stack" style="flex: 1 1 480px; gap: 16px">
+      <div class="eyebrow" style="font-size: 16px">WA craft beer</div>
+      <h1 class="display display--xl">Our Beers</h1>
+    </div>
+    <div class="stack body" style="flex: 1 1 440px; gap: 14px; font-size: 18px">
+      <p>WA craft beer encourages a certain boldness and a willingness to innovate. Our brewing team brews the full range onsite in Beerland's 12HL brewhouse — five core beers, plus limited small-batch releases in different styles every month.</p>
+      <p>Beerland beers have won awards around Australia, including two Champion Australian Beer titles at the Australian International Beer Awards.</p>
+    </div>
+  </header>
+
+  {padrino && godfather && (
+    <section id="face-off" class="wrap" aria-labelledby="faceoff-title" style="padding-bottom: 72px">
+      <div class="faceoff card">
+        <Picture src={padrino.image} alt={`${padrino.name} label`} width={380} placeholder={padrino.name} class="faceoff__label faceoff__label--l" style={`background-color: ${padrino.colour}`} />
+        <div class="faceoff__body stack">
+          <span class="eyebrow eyebrow--sm">Now pouring side by side at WBC</span>
+          <h2 id="faceoff-title" class="display" style="font-size: clamp(36px, 4.5vw, 56px)">The Face Off</h2>
+          <span class="faceoff__vs" aria-hidden="true">VS</span>
+          <p class="body">Two session IPAs. One turf. The {padrino.name} runs the docks; the {godfather.name} runs the city. Taste both at the bar and pick a side.</p>
+          <div class="faceoff__pick" data-faceoff-pick>
+            <button type="button" class="btn faceoff__btn" style="background: #E0703A; color: var(--bg)" data-side="padrino">I'm with the Padrino</button>
+            <button type="button" class="btn faceoff__btn" style="background: #3B63A8; color: #fff" data-side="godfather">I'm with the Godfather</button>
+          </div>
+          <div role="status" class="stack faceoff__picked" data-faceoff-picked hidden>
+            <span class="display" style="font-size: 22px" data-faceoff-line></span>
+            <button type="button" class="faceoff__switch" data-faceoff-clear>Switch sides</button>
+          </div>
+        </div>
+        <Picture src={godfather.image} alt={`${godfather.name} label`} width={380} placeholder={godfather.name} class="faceoff__label faceoff__label--r" style={`background-color: ${godfather.colour}`} />
+      </div>
+    </section>
+  )}
+
+  <BeerCarousel beers={limited} rule />
+
+  <section id="core" class="wrap stack" aria-labelledby="core-title" style="gap: 28px; padding-bottom: 96px">
+    <div class="section-rule stack" style="gap: 8px">
+      <div class="eyebrow">Always pouring</div>
+      <h2 id="core-title" class="display display--lg">Core Range</h2>
+    </div>
+    <div class="core">
+      {core.map(({ data: beer }) => (
+        <article class="card stack">
+          <Picture src={beer.image} alt={beer.alt} width={512} placeholder={`${beer.name} label`} class="core__label" />
+          <div class="stack" style="padding: 18px 18px 20px; gap: 6px">
+            <h3 class="display display--sm">{beer.name}</h3>
+            <span class="label accent" style="letter-spacing: 1.5px">{formatStyle(beer.style, beer.abv)}</span>
+            <p class="body" style="font-size: 15px; line-height: 1.5">{beer.summary}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="paddle">
+    <div class="wrap stack" style="gap: 36px; padding-top: 80px; padding-bottom: 80px">
+      <div class="paddle__head">
+        <div class="stack" style="gap: 10px">
+          <div class="eyebrow eyebrow--dark">At {site.brewery.name}</div>
+          <h2 class="display" style="font-size: clamp(34px, 4.5vw, 54px); line-height: 1.02">Try the paddle.<br />Take home a Canimal.</h2>
+        </div>
+        <a href={site.brewery.paddleUrl} class="btn btn--dark btn--lg">View tasting notes</a>
+      </div>
+      <div class="paddle__grid">
+        <div class="paddle__card">
+          <span class="paddle__name">Tasting Paddle</span>
+          <span>5 × 100ml serves of our core range, served on a tasting paddle.</span>
+        </div>
+        <div class="paddle__card">
+          <span class="paddle__name">Take-away Canimals</span>
+          <span>946ml cans of our core range and limited editions, to take home.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap stack" aria-labelledby="brewer-title" style="gap: 40px; padding-top: 104px; padding-bottom: 104px">
+    <div class="section-rule brewers__head">
+      <div class="stack" style="gap: 8px">
+        <div class="eyebrow">Hand crafted in WA</div>
+        <h2 id="brewer-title" class="display display--lg">Our Brewers</h2>
+      </div>
+    </div>
+
+    <div class="brewers__strip">
+      <Picture alt="Ken Arrowsmith holding a trophy at the Australian International Beer Awards" placeholder="Photo: Ken with trophy" class="brewers__photo" />
+      <Picture alt="Vintage Emu Bitter sign featuring the bearded brewer illustration modelled on Ken" placeholder="Photo: Emu Bitter sign" class="brewers__photo" />
+      <blockquote class="stack brewers__quote">
+        <span class="eyebrow eyebrow--sm eyebrow--dark">The original face of Emu Bitter</span>
+        <p class="display" style="font-size: clamp(20px, 2vw, 26px); line-height: 1.3; text-transform: none">“I did have a beard at the time but probably not as luxurious as the one featured on the label.”</p>
+        <footer style="font-size: 14px; color: var(--ink-soft)">Ken Arrowsmith, PerthNow, 2016</footer>
+      </blockquote>
+    </div>
+
+    <div class="brewers__bios">
+      <div class="stack" style="flex: 1.4 1 480px; gap: 18px">
+        <div class="stack" style="gap: 8px">
+          <span class="eyebrow eyebrow--sm">Head Brewer</span>
+          <h3 class="display" style="font-size: clamp(30px, 3.4vw, 40px)">Ken Arrowsmith</h3>
+        </div>
+        <p class="body" style="font-size: 18px; line-height: 1.65">Ken has been at the heart of WA beer for more than four decades. As Head Brewer at the Swan Brewery through the 1980s and '90s, he became the face of Emu Bitter — that bearded brewer on the label is Ken, with what he calls "a fair bit of artistic licence".</p>
+        <p class="body" style="font-size: 18px; line-height: 1.65">He holds a Bachelor of Applied Science (Chemistry) and was made a Fellow of the Institute of Brewing and Distilling in 2004. Along the way he's brewed for Tooheys and the South Australian Brewing Company, commissioned and ran The Old Lion Hotel in North Adelaide, and was Director of Operations at the Swan Brewing Co — right where he started as an Assistant Chemist.</p>
+        <p class="body" style="font-size: 18px; line-height: 1.65">When Ken started out, in the early '80s, there was one brewery in Western Australia. Today he oversees Beerland's core range and small-batch releases, brewed onsite at Whitfords Brewing Co.</p>
+      </div>
+      <div class="card brewers__callum">
+        <Picture alt="Callum Carey" placeholder="Photo: Callum" style="flex: 0 0 120px; height: 120px" />
+        <div class="stack" style="flex: 1 1 200px; gap: 8px">
+          <span class="eyebrow eyebrow--sm">Lead Brewer</span>
+          <h3 class="display" style="font-size: 30px">Callum Carey</h3>
+          <p class="body">Before Beerland, Callum designed Bailey Brewing's Tropic NEIPA — a hazy, fruit-forward beer that was one of the best-sellers at Froth Town 2025. [More from Callum coming soon.]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Signup />
+</BaseLayout>
+
+<script>
+  const pick = document.querySelector<HTMLElement>('[data-faceoff-pick]');
+  const picked = document.querySelector<HTMLElement>('[data-faceoff-picked]');
+  const line = document.querySelector('[data-faceoff-line]');
+  const lines: Record<string, string> = {
+    padrino: "You're with the Padrino. Choose wisely.",
+    godfather: "You're with the Godfather. Respect.",
+  };
+  const show = (side: string | null) => {
+    if (!pick || !picked || !line) return;
+    pick.hidden = !!side;
+    picked.hidden = !side;
+    if (side) line.textContent = lines[side];
+    try { side ? localStorage.setItem('bl_side', side) : localStorage.removeItem('bl_side'); } catch {}
+  };
+  pick?.querySelectorAll<HTMLButtonElement>('[data-side]').forEach((b) => b.addEventListener('click', () => show(b.dataset.side!)));
+  document.querySelector('[data-faceoff-clear]')?.addEventListener('click', () => show(null));
+  try { const saved = localStorage.getItem('bl_side'); if (saved && lines[saved]) show(saved); } catch {}
+</script>
+
+<style>
+  .page-head { padding-top: 96px; padding-bottom: 56px; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px 64px; }
+
+  .faceoff { padding: clamp(28px, 4vw, 48px); display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 28px 40px; }
+  .faceoff :global(.faceoff__label) { width: 190px; aspect-ratio: 560 / 871; object-fit: cover; border-radius: 4px; box-shadow: 0 18px 36px rgba(0, 0, 0, .5); }
+  .faceoff :global(.faceoff__label--l) { transform: rotate(-4deg); }
+  .faceoff :global(.faceoff__label--r) { transform: rotate(4deg); }
+  .faceoff__body { flex: 1 1 340px; max-width: 520px; align-items: center; gap: 14px; text-align: center; }
+  .faceoff__vs { font-family: var(--font-eyebrow); font-stretch: 125%; font-weight: 900; font-size: 28px; color: var(--ember); }
+  .faceoff__pick { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 4px; }
+  .faceoff__btn { min-height: 50px; padding: 0 22px; font-size: 16px; }
+  .faceoff__btn:hover { filter: brightness(1.1); }
+  .faceoff__picked { align-items: center; gap: 6px; margin-top: 4px; }
+  .faceoff [hidden] { display: none; }
+  .faceoff__switch {
+    min-height: 44px; padding: 0 8px; background: none; border: 0; cursor: pointer; color: var(--text-muted); text-decoration: underline;
+    font-family: var(--font-label); font-weight: 600; font-size: 15px; letter-spacing: 2px; text-transform: uppercase;
+  }
+
+  .core { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr)); gap: 20px; }
+  .core :global(.core__label) { width: 100%; aspect-ratio: 512 / 794; object-fit: cover; }
+
+  .paddle { background: var(--cream); color: var(--bg); }
+  .paddle__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 40px; }
+  .paddle__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 20px; }
+  .paddle__card { border: 2px solid var(--bg); padding: 28px; display: flex; flex-direction: column; gap: 8px; font-size: 17px; line-height: 1.5; color: var(--ink-soft); }
+  .paddle__name { font-family: var(--font-eyebrow); font-stretch: 125%; font-weight: 900; font-size: 22px; text-transform: uppercase; color: var(--bg); }
+
+  .brewers__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 40px; }
+  .brewers__strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); background: var(--cream); color: var(--bg); }
+  .brewers__strip :global(.brewers__photo) { width: 100%; aspect-ratio: 1; object-fit: cover; }
+  .brewers__quote { margin: 0; padding: clamp(24px, 3vw, 40px); justify-content: center; gap: 16px; }
+  .brewers__bios { display: flex; flex-wrap: wrap; gap: 40px 72px; }
+  .brewers__callum { flex: 1 1 340px; align-self: flex-start; padding: 28px; display: flex; flex-wrap: wrap; gap: 20px 24px; align-items: flex-start; }
+</style>

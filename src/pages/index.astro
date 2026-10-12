@@ -1,0 +1,241 @@
+---
+import { getOrdered } from '../scripts/content';
+import { getImage, Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Icon from '../components/Icon.astro';
+import Picture from '../components/Picture.astro';
+import BeerCarousel from '../components/BeerCarousel.astro';
+import Signup from '../components/Signup.astro';
+import badge from '../assets/brand/badge.svg';
+import poster from '../assets/photos/tap-pour.jpg';
+import { site } from '../config/site';
+import { url } from '../scripts/url';
+
+const limited = await getOrdered('beers', (b) => b.data.range === 'limited');
+const igSets = await getOrdered('instagram');
+const posterImg = await getImage({ src: poster, width: 1200, format: 'webp' });
+
+// Optional tile photos: drop venue.jpg / merch-flatlay.jpg into src/assets/photos/ and they appear.
+const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/photos/*.{jpg,jpeg,png,webp}', { eager: true });
+const photo = (name: string) => Object.entries(photos).find(([path]) => path.includes(`/${name}.`))?.[1].default;
+const tiles = [
+  { href: 'where-to-buy/', image: photo('venue'), note: 'Photo: beer in a venue', eyebrow: 'Thirsty?', title: 'Where to buy', cta: 'Find a stockist →' },
+  { href: 'merch/', image: photo('merch-flatlay'), note: 'Photo: merch flat-lay', eyebrow: 'Rep the brand', title: 'Merch', cta: 'Shop merch →' },
+];
+---
+<BaseLayout bareNav>
+  <header slot="header" class="hero stripes">
+    <video class="hero__video" autoplay muted loop playsinline preload="metadata" poster={posterImg.src} aria-hidden="true" data-hero-video>
+      <source src={url('videos/hero-portrait.mp4')} type="video/mp4" media="(max-aspect-ratio: 3/4)" />
+      <source src={url('videos/hero-landscape.mp4')} type="video/mp4" />
+    </video>
+    <div class="hero__shade"></div>
+    <button type="button" class="hero__toggle" aria-label="Pause background video" data-hero-toggle>
+      <span data-icon-pause><Icon name="pause" size={16} /></span>
+      <span data-icon-play hidden><Icon name="play" size={16} /></span>
+    </button>
+
+    <Nav />
+
+    <img src={badge.src} width="340" height="340" alt="" aria-hidden="true" class="hero__badge" />
+    <div class="hero__body wrap">
+      <div class="stack" style="max-width: 900px; gap: 20px">
+        <div class="eyebrow" style="font-size: 17px">Fresh from the tanks</div>
+        <h1 class="display hero__title">New beers.<br />Online now.</h1>
+        <p class="hero__lede">Small-batch beer from Beerland Brewing, brewed at Whitfords Brewing Co.</p>
+        <div class="hero__ctas">
+          <a href="#limited" class="btn btn--solid btn--lg">See the new beers</a>
+          <a href={url('where-to-buy/')} class="btn btn--line btn--lg">Where to buy</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="drop wrap" aria-label="Next release" data-countdown={site.nextDrop.date}>
+    <div class="drop__title">
+      <span class="drop__label">Next drop:</span>
+      <span class="display" style="font-size: 28px">{site.nextDrop.title}</span>
+    </div>
+    <span class="display drop__live" data-live hidden>Online now!</span>
+    <div class="drop__units" data-units>
+      {['Days', 'Hrs', 'Mins', 'Secs'].map((label) => (
+        <div class="drop__unit"><span class="display" data-unit>--</span><span>{label}</span></div>
+      ))}
+    </div>
+  </section>
+
+  <BeerCarousel beers={limited}>
+    <a href={url('our-beers/')} class="text-link" style="align-self: center">See all our beers →</a>
+  </BeerCarousel>
+
+  <section class="tiles" aria-label="Explore">
+    {tiles.map((t) => (
+      <a href={url(t.href)} class="tile stripes">
+        {t.image
+          ? <Image src={t.image} alt="" width={1000} class="tile__img" />
+          : <span class="tile__note">[{t.note}]</span>}
+        <span class="eyebrow">{t.eyebrow}</span>
+        <span class="display tile__title">{t.title}</span>
+        <span class="tile__cta">{t.cta}</span>
+      </a>
+    ))}
+  </section>
+
+  <section class="story wrap">
+    <div class="story__brewed stack">
+      <span class="eyebrow eyebrow--sm">Brewed at</span>
+      <Picture alt="Whitfords Brewing Co." placeholder="Whitfords logo" style="width: 160px; height: 160px" />
+    </div>
+    <div class="stack" style="flex: 1 1 420px; gap: 16px">
+      <div class="eyebrow">Hand crafted in WA</div>
+      <h2 class="display" style="font-size: clamp(36px, 4.5vw, 52px); line-height: 1.05">Welcome to Beerland</h2>
+      <p class="body" style="font-size: 18px">Every Beerland beer is brewed onsite in our 12HL brewhouse at Whitfords Brewing Co., under the careful eye of Head Brewer Ken Arrowsmith — the original face of Emu Bitter. Our beers have won awards around Australia, including two Champion Australian Beer titles at the Australian International Beer Awards.</p>
+      <a href={url('our-beers/#core')} class="text-link">Meet the core range →</a>
+    </div>
+  </section>
+
+  <section class="ig wrap stack" data-ig>
+    <div class="ig__head">
+      <div class="stack" style="gap: 8px">
+        <div class="eyebrow">Tag us on Instagram</div>
+        <h2 class="display" style="font-size: clamp(32px, 4vw, 44px)" data-ig-title>#{igSets[0]?.id}</h2>
+      </div>
+      <div role="group" aria-label="Choose a hashtag" class="ig__tabs">
+        {igSets.map((set, i) => (
+          <button type="button" class="chip" style="letter-spacing: 1.5px; text-transform: none; font-size: 16px" aria-pressed={i === 0 ? 'true' : 'false'} data-ig-tab={set.id}>#{set.id}</button>
+        ))}
+      </div>
+    </div>
+    {igSets.map((set, i) => (
+      <div class="ig__grid" data-ig-grid={set.id} hidden={i !== 0}>
+        {set.data.posts.map((post, j) => (
+          <a href={post.url ?? `https://www.instagram.com/explore/tags/${set.id}/`} class="ig__tile" aria-label={`Instagram post ${j + 1} tagged #${set.id}`}>
+            <Picture src={post.image} alt="" width={400} placeholder="Instagram photo" />
+            <span class="ig__overlay" aria-hidden="true"><Icon name="instagram" size={28} /></span>
+          </a>
+        ))}
+      </div>
+    ))}
+    {igSets.map((set, i) => (
+      <a href={`https://www.instagram.com/explore/tags/${set.id}/`} class="text-link" style="align-self: center" data-ig-more={set.id} hidden={i !== 0}>See more #{set.id} on Instagram →</a>
+    ))}
+  </section>
+
+  <Signup variant="feature" />
+</BaseLayout>
+
+<script>
+  // Hero video: pause/play button, and start paused for people who prefer reduced motion
+  const video = document.querySelector<HTMLVideoElement>('[data-hero-video]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-hero-toggle]');
+  if (video && toggle) {
+    const sync = () => {
+      toggle.setAttribute('aria-label', video.paused ? 'Play background video' : 'Pause background video');
+      toggle.querySelector<HTMLElement>('[data-icon-pause]')!.hidden = video.paused;
+      toggle.querySelector<HTMLElement>('[data-icon-play]')!.hidden = !video.paused;
+    };
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { video.removeAttribute('autoplay'); video.pause(); }
+    video.addEventListener('play', sync);
+    video.addEventListener('pause', sync);
+    toggle.addEventListener('click', () => { video.paused ? video.play().catch(() => {}) : video.pause(); });
+    sync();
+  }
+
+  // Countdown to the next drop
+  const drop = document.querySelector<HTMLElement>('[data-countdown]');
+  if (drop) {
+    const target = Date.parse(drop.dataset.countdown!);
+    const units = [...drop.querySelectorAll('[data-unit]')];
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const tick = () => {
+      const diff = Math.max(0, (isNaN(target) ? 0 : target) - Date.now());
+      if (diff === 0) {
+        drop.querySelector<HTMLElement>('[data-units]')!.hidden = true;
+        drop.querySelector<HTMLElement>('[data-live]')!.hidden = false;
+        return clearInterval(timer);
+      }
+      const values = [diff / 864e5, (diff / 36e5) % 24, (diff / 6e4) % 60, (diff / 1e3) % 60];
+      units.forEach((u, i) => (u.textContent = pad(Math.floor(values[i]))));
+    };
+    const timer = setInterval(tick, 1000);
+    tick();
+  }
+
+  // Instagram hashtag tabs
+  const ig = document.querySelector<HTMLElement>('[data-ig]');
+  ig?.querySelectorAll<HTMLButtonElement>('[data-ig-tab]').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const key = tab.dataset.igTab!;
+      ig.querySelectorAll('[data-ig-tab]').forEach((t) => t.setAttribute('aria-pressed', String(t === tab)));
+      ig.querySelectorAll<HTMLElement>('[data-ig-grid]').forEach((g) => (g.hidden = g.dataset.igGrid !== key));
+      ig.querySelectorAll<HTMLElement>('[data-ig-more]').forEach((a) => (a.hidden = a.dataset.igMore !== key));
+      ig.querySelector('[data-ig-title]')!.textContent = `#${key}`;
+    });
+  });
+</script>
+
+<style>
+  .hero { position: relative; min-height: min(820px, 100svh); display: flex; flex-direction: column; overflow: hidden; }
+  .hero__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero__shade { position: absolute; inset: 0; background: rgba(15, 12, 9, .5); }
+  .hero__toggle {
+    position: absolute; z-index: 2; right: var(--gutter); bottom: 24px; width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    background: rgba(23, 19, 15, .6); color: var(--cream); border: 1px solid rgba(241, 230, 208, .5);
+  }
+  .hero__toggle [hidden] { display: none; }
+  .hero__badge {
+    position: absolute; right: clamp(40px, 6vw, 110px); top: 50%; transform: translateY(-38%);
+    width: clamp(220px, 24vw, 340px); filter: drop-shadow(0 8px 24px rgba(0, 0, 0, .45));
+  }
+  @media (max-width: 960px) { .hero__badge { display: none; } }
+  .hero__body { position: relative; flex: 1; display: flex; align-items: flex-end; width: 100%; max-width: none; padding-top: 80px; padding-bottom: 96px; }
+  .hero__title { font-size: clamp(56px, 9vw, 132px); line-height: .92; letter-spacing: 1px; }
+  .hero__lede { font-size: 20px; line-height: 1.5; color: var(--cream-soft); max-width: 560px; }
+  .hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+
+  .drop {
+    max-width: none; background: var(--accent); color: var(--bg); padding-top: 22px; padding-bottom: 22px;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 40px;
+  }
+  .drop__title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; }
+  .drop__label { font-family: var(--font-label); font-weight: 700; font-size: 22px; letter-spacing: 3px; text-transform: uppercase; }
+  .drop__live { font-size: 32px; }
+  .drop__units { display: flex; gap: 10px; }
+  .drop__units[hidden], .drop__live[hidden] { display: none; }
+  .drop__unit { display: flex; flex-direction: column; align-items: center; min-width: 72px; padding: 8px 10px; background: var(--bg); color: var(--cream); }
+  .drop__unit .display { font-size: 30px; line-height: 1.1; }
+  .drop__unit span:last-child { font-family: var(--font-label); font-weight: 600; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
+
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(480px, 100%), 1fr)); }
+  .tile {
+    position: relative; min-height: 420px; display: flex; flex-direction: column; justify-content: flex-end; gap: 10px;
+    padding: 48px var(--gutter); border-right: 1px solid rgba(241, 230, 208, .1);
+  }
+  .tile { overflow: hidden; isolation: isolate; }
+  .tile :global(.tile__img) { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+  .tile:has(.tile__img)::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(15, 12, 9, .9), rgba(15, 12, 9, .25) 70%); }
+  .tile:hover :global(.tile__img) { transform: scale(1.03); }
+  .tile__note { position: absolute; top: 24px; left: var(--gutter); font-family: var(--font-label); font-weight: 600; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-faint); }
+  .tile__title { font-size: clamp(40px, 5vw, 60px); }
+  .tile__cta { font-family: var(--font-label); font-weight: 700; font-size: 17px; letter-spacing: 2px; text-transform: uppercase; color: var(--cream); }
+  .tile:hover .tile__cta { color: var(--accent); }
+
+  .story { max-width: 1100px; padding-top: 112px; padding-bottom: 112px; display: flex; flex-wrap: wrap; align-items: center; gap: 48px 72px; }
+  .story__brewed { flex: 0 0 auto; align-items: center; gap: 14px; margin: 0 auto; }
+
+  .ig { gap: 28px; padding-bottom: 112px; }
+  .ig__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 32px; }
+  .ig__tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ig__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr)); gap: 10px; }
+  .ig__grid[hidden], .ig [hidden] { display: none; }
+  .ig__tile { position: relative; display: block; aspect-ratio: 1; overflow: hidden; background: var(--surface); }
+  .ig__tile :global(img), .ig__tile :global(.ph) { width: 100%; height: 100%; object-fit: cover; }
+  .ig__overlay {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(23, 19, 15, .55); color: var(--cream); opacity: 0; transition: opacity .2s;
+  }
+  .ig__tile:hover .ig__overlay, .ig__tile:focus-visible .ig__overlay { opacity: 1; }
+</style>

@@ -1,0 +1,94 @@
+---
+// Mailing list sign-up. `variant="feature"` is the big cream block on the home page;
+// `variant="bar"` is the compact strip used on other pages.
+import { site } from '../config/site';
+
+interface Props { variant?: 'feature' | 'bar'; heading?: string }
+const { variant = 'bar', heading = 'Hear about new releases first' } = Astro.props;
+const { action, emailField, firstNameField } = site.mailingList;
+---
+{variant === 'feature' ? (
+  <section id="signup" class="signup signup--feature" data-signup data-live={action ? '' : undefined}>
+    <div class="wrap signup__feature">
+      <div class="eyebrow eyebrow--dark">Be first in line</div>
+      <h2 class="display" style="font-size: clamp(38px, 5vw, 60px)">Join the mailing list</h2>
+      <p class="signup__lede">New beer drops, merch restocks and events, straight to your inbox. No spam.</p>
+      <form class="signup__form stack" method="post" action={action || undefined} target={action ? '_blank' : undefined} data-signup-form>
+        <div class="signup__fields">
+          <label class="signup__label">
+            <span>First name</span>
+            <input class="field field--light" type="text" name={firstNameField} autocomplete="given-name" placeholder="Your first name" />
+          </label>
+          <label class="signup__label">
+            <span>Email</span>
+            <input class="field field--light" type="email" name={emailField} required autocomplete="email" placeholder="you@example.com" />
+          </label>
+        </div>
+        <label class="signup__consent">
+          <input type="checkbox" required />
+          <span>I'm 18 or over and happy to get emails from Beerland Brewing. Unsubscribe any time.</span>
+        </label>
+        <button type="submit" class="btn btn--dark btn--lg" style="align-self: center; padding: 0 44px">Sign me up</button>
+      </form>
+      <div role="status" class="signup__done" data-signup-done hidden>
+        <span class="display" style="font-size: 30px">You're on the list. Cheers!</span>
+        <span>Keep an eye on your inbox for the next drop.</span>
+      </div>
+    </div>
+  </section>
+) : (
+  <section id="signup" class="signup signup--bar" data-signup>
+    <div class="wrap signup__bar">
+      <div class="stack" style="flex: 1 1 360px; gap: 6px">
+        <h2 class="display" style="font-size: 32px">{heading}</h2>
+        <p class="body" style="font-size: 16px">Join the Beerland mailing list. 18+ only. No spam.</p>
+      </div>
+      <form class="signup__inline" method="post" action={action || undefined} target={action ? '_blank' : undefined} data-signup-form>
+        <label style="flex: 1 1 240px; display: flex">
+          <span class="sr-only">Email address</span>
+          <input class="field" type="email" name={emailField} required autocomplete="email" placeholder="Your email" />
+        </label>
+        <button type="submit" class="btn btn--solid">Join</button>
+      </form>
+      <div role="status" class="signup__done-bar display" data-signup-done hidden>You're on the list. Cheers!</div>
+    </div>
+  </section>
+)}
+
+<script>
+  // Without a mailing list provider configured there's nowhere to send the form,
+  // so we just show the thank-you. With one configured the form posts normally.
+  document.querySelectorAll<HTMLFormElement>('[data-signup-form]').forEach((form) => {
+    form.addEventListener('submit', (e) => {
+      if (!form.getAttribute('action')) {
+        e.preventDefault();
+        console.warn('Mailing list not connected yet — set site.mailingList.action in src/config/site.ts');
+      }
+      const done = form.parentElement?.querySelector<HTMLElement>('[data-signup-done]');
+      setTimeout(() => { form.hidden = true; if (done) done.hidden = false; }, 0);
+    });
+  });
+</script>
+
+<style>
+  .signup--feature { background: var(--cream); color: var(--bg); padding: 96px 0; }
+  .signup__feature { max-width: 760px; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+  .signup__lede { font-size: 18px; line-height: 1.55; color: var(--ink-soft); max-width: 560px; }
+  .signup__form { width: 100%; gap: 14px; margin-top: 16px; text-align: left; }
+  .signup__form[hidden], .signup__inline[hidden] { display: none; }
+  .signup__fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 12px; }
+  .signup__label {
+    display: flex; flex-direction: column; gap: 6px;
+    font-family: var(--font-label); font-weight: 600; font-size: 14px; letter-spacing: 2px; text-transform: uppercase;
+  }
+  .signup__consent { display: flex; align-items: flex-start; gap: 12px; padding: 6px 0; font-size: 15px; line-height: 1.45; color: var(--ink-soft); cursor: pointer; }
+  .signup__consent input { width: 20px; height: 20px; margin: 1px 0 0; flex: 0 0 auto; accent-color: var(--bg); }
+  .signup__done { margin-top: 16px; padding: 28px 32px; border: 2px solid var(--bg); display: flex; flex-direction: column; gap: 6px; color: var(--ink-soft); }
+  .signup__done span:first-child { color: var(--bg); }
+  .signup__done[hidden], .signup__done-bar[hidden] { display: none; }
+
+  .signup--bar { padding: 72px 0; background: var(--surface); border-top: 1px solid rgba(241, 230, 208, .1); }
+  .signup__bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 48px; }
+  .signup__inline { flex: 1 1 420px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .signup__done-bar { flex: 1 1 420px; font-size: 24px; color: var(--accent); }
+</style>

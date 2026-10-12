@@ -1,0 +1,26 @@
+# Places to drink or buy Beerland. Pins are placed on the illustrated map by
+# percentage (x from the left, y from the top).
+
+- id: whitfords
+  name: Whitfords Brewing Co.
+  kind: brewery
+  badge: The brewery · Open 7 days
+  address:
+    - Shop MM6, Westfield Whitford City
+    - Cnr Marmion & Whitfords Ave, Hillarys WA 6025
+  hours: 11am – late, every day
+  blurb: Every Beerland beer is brewed here. Grab a tasting paddle of the core range, a pint straight from the tanks, or take-away Canimals.
+  mapsUrl: https://www.google.com/maps/search/?api=1&query=Whitfords+Brewing+Co+Westfield+Whitford+City+Hillarys
+  pin: { x: 39, y: 22, label: Whitfords Brewing Co. }
+
+- id: fremantle-beerfest
+  name: Fremantle BeerFest
+  kind: event
+  badge: Pop-up · Fri 13 – Sat 14 Nov
+  address:
+    - Esplanade Park, Fremantle WA
+  blurb: Pouring our two Beerfest exclusives — Jurassic Fog and Guava Lava. Limited edition NEIPAs, first poured at the festival.
+  mapsUrl: https://www.google.com/maps/search/?api=1&query=Esplanade+Park+Fremantle
+  beers: [jurassic-fog, guava-lava]
+  pin: { x: 34, y: 73, label: BeerFest · 13–14 Nov }
+  colour: '#B8432F'
