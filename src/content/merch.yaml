@@ -2,7 +2,18 @@
 # Each product needs at least one view; add `image:` lines as photos arrive
 # (drop the files in src/assets/merch/).
 
-- id: tee
+- id: tee-white
+  name: Periodic Table of Beers Tee
+  category: Apparel
+  price: 40
+  colour: White
+  detail: Badge on the chest, Periodic Table of Beers print across the back.
+  sizes: [S, M, L, XL, XXL]
+  views:
+    - { label: Front, image: ../assets/merch/tee-white-front.jpg }
+    - { label: Back }
+
+- id: tee-black
   name: Periodic Table of Beers Tee
   category: Apparel
   price: 40
